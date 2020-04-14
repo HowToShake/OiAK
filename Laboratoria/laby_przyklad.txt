@@ -1,0 +1,127 @@
+.code32
+SYSCALL = 0x80
+SYSEXIT = 1
+EXIT_SUCCESS = 0
+SYSWRITE = 4
+STDOUT = 1
+SYSREAD = 3
+STDIN = 0
+
+.global _start
+
+.text
+msg: .ascii "Podane liczby to: \n"
+msg_len = . -msg
+printer: .ascii "Wynik to: %x%x%x%x%x\n"
+
+.data                                                   #Subsekcja mowiaca "as" zeby zaczal czytac dane od konca -- LittleEndian
+                                                        #long -- to samo co int
+liczba1:
+.long 0x10304008, 0x701100FF, 0x45100020, 0x08570030    #Liczby przedstawione w bazie HEX
+
+liczba2:
+.long 0xF040500C, 0x00220026, 0x321000CB, 0x04520031
+
+wynik:
+.long 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000
+
+.bss
+
+output: .space $48, $0x20
+outputend: .space $1
+
+
+_start:
+
+mov $3, %edi                     #4 "segmenty" liczby1 -- 4 iteracjerror: operand type mismatch for `push'
+clc                              #CF = 0
+pushf                            #PUSH Flag register onto stack -- CF Flag
+
+addAlgo:
+  clc                            #Zerujemy przeniesienie
+  popf                           #Pop Stack into flag
+
+  mov liczba1(,%edi,4), %eax     #Przesunięcie(baza,indeks,mnożnik) baza i indeks -rejestry
+  mov liczba2(,%edi,4), %ebx
+
+  adc %eax, %ebx                 #Dodaj wartości w rejestrach a i b
+
+  #push %ebx
+   mov %ebx, wyniki(,%edi,4)                      #Wynik dodawania wrzuć na stos
+  pushf                          #I zapisz flagę przeniesienia
+
+  cmp $0, %edi                   #licznik -- jeśli rejestr %edi == 0 to...
+  jz lastCarry                   #...skacz do przeniesienia
+
+  sub $1, %edi                   #Jeśli cmp != 0 to przejdzie tutaj i odejmie od licznika 1
+  jmp addAlgo                    #Przeskocz na początek pętli
+
+
+lastCarry:
+
+  popf                           #Ściągnij flagę przeniesienia ze stosu
+  mov $0, %eax
+  mov $0, %ebx                   #Wyczyść rejestry
+  #xor %eax, %eax
+  #xor %ebx, %ebx                #Wyczyść rejestry 2 wersja.
+
+  adc %eax, %ebx                 #Dodaj Z UWZGLĘDNIENIEM FLAGI CF
+  mov %ebx, $wynik 
+  #push %ebx                      #Wynik dodaj na stos
+  mov $4, %edi                   #Ustaw limit czytania, tj. wynik na max 5 pozycjach
+  jmp end
+
+  end:
+ # pop %ecx                       #Zdejmij wartość ze stosu i zachowaj w ecx
+
+ # mov $SYSWRITE, %eax
+ # mov $STDOUT, %ebx
+ # mov %ecx, %ecx
+ # mov $32, %edx
+ # int $SYSCALL
+#  push $printer
+#  call printf
+
+#  cmp $0, %edi
+ # jmp exit
+
+#  sub $1, %edi
+ # jmp end
+
+   mov $4, %edi
+   mov $0,%esi
+	mov $48, %EDX
+firstloop:
+	mov wynik(,%edi,4), %eax
+	mov $8, %ecx
+	
+sondloop:
+	mov %eax,%ebx
+	and $15, %ebx
+	add $0x20, %ebx
+	movb %bl, outputend(,%esi,1)
+	inc %esi
+	shr %eax, $4
+	dec %ecx
+	cmp $0, %ecx
+	jl sondloop
+	
+	dec %edi
+	cmp $0,%edi
+	jl firstloop
+printting:
+
+mov $SYSWRITE, %eax
+mov $STDOUT, %ebx
+mov $output, %ecx
+mov $48, %edx
+	
+
+
+
+exit:
+
+
+  mov $SYSEXIT, %eax
+  mov $EXIT_SUCCESS, %ebx
+  int $SYSCALL
