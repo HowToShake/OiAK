@@ -6,11 +6,9 @@
 #include <random>
 #include <iterator>
 #include <sstream>
-
+#include <iomanip>
 
 using namespace std;
-
-
 
 struct BigInt {
 
@@ -21,10 +19,189 @@ struct BigInt {
     vector<int> ONE = Integer("1");
     vector<int> TWO = Integer("2");
 
-
     vector<int> num1;
     vector<int> num2;
     vector<int> result;
+
+
+    vector<int> vectorForSection[3] = { Integer("18446744073709551616"), Integer("318665857834031151167461"), Integer("3317044064679887385961981") };
+    unsigned long long numSection[13] = { 0, 2047, 1373653 , 9080191 , 25326001 , 3215031751 , 4759123141 , 1122004669633 ,2152302898747, 3474749660383 ,  341550071728321, 3825123056546413051 };
+
+
+    vector<int> numbersToMR;
+    int amountOfNumbersToMr;
+
+    void prepareValuesForMRAlgo(string num1) {
+        int numberLength = num1.length();
+
+        //Przedziały mieszczące się w unsigned long long.
+        if (numberLength <= 19) {
+
+            //Liczby 19 cyfrowe do 3825123056546413051
+            unsigned long long input = stoull(num1);
+            if (input < numSection[11]) {
+                if (input > numSection[0] && input < numSection[1]) {
+                    numbersToMR.push_back(2);
+                    amountOfNumbersToMr = 1;
+                }
+                else if (input >= numSection[1] && input < numSection[2]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    amountOfNumbersToMr = 2;
+                }
+                else if (input >= numSection[2] && input < numSection[3]) {
+                    numbersToMR.push_back(31);
+                    numbersToMR.push_back(73);
+                    amountOfNumbersToMr = 2;
+                }
+                else if (input >= numSection[3] && input < numSection[4]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    amountOfNumbersToMr = 3;
+                }
+                else if (input >= numSection[4] && input < numSection[5]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    numbersToMR.push_back(7);
+                    amountOfNumbersToMr = 4;
+                }
+                else if (input >= numSection[5] && input < numSection[6]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(7);
+                    numbersToMR.push_back(61);
+                    amountOfNumbersToMr = 3;
+                }
+                else if (input >= numSection[6] && input < numSection[7]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(13);
+                    numbersToMR.push_back(23);
+                    numbersToMR.push_back(1662803);
+                    amountOfNumbersToMr = 4;
+                }
+                else if (input >= numSection[7] && input < numSection[8]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    numbersToMR.push_back(7);
+                    numbersToMR.push_back(11);
+                    amountOfNumbersToMr = 5;
+                }
+                else if (input >= numSection[8] && input < numSection[9]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    numbersToMR.push_back(7);
+                    numbersToMR.push_back(11);
+                    numbersToMR.push_back(13);
+                    amountOfNumbersToMr = 6;
+                }
+                else if (input >= numSection[9] && input < numSection[10]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    numbersToMR.push_back(7);
+                    numbersToMR.push_back(11);
+                    numbersToMR.push_back(13);
+                    numbersToMR.push_back(17);
+                    amountOfNumbersToMr = 7;
+                }
+                else if (input >= numSection[10] && input < numSection[11]) {
+                    numbersToMR.push_back(2);
+                    numbersToMR.push_back(3);
+                    numbersToMR.push_back(5);
+                    numbersToMR.push_back(7);
+                    numbersToMR.push_back(11);
+                    numbersToMR.push_back(13);
+                    numbersToMR.push_back(17);
+                    numbersToMR.push_back(19);
+                    numbersToMR.push_back(23);
+                    amountOfNumbersToMr = 9;
+                }
+            }
+            //Liczby 19 cyfrowe mniejsze od 20 cyfrowych. MAX 999'999'999'999'999'999'9
+            else {
+                numbersToMR.push_back(2);
+                numbersToMR.push_back(3);
+                numbersToMR.push_back(5);
+                numbersToMR.push_back(7);
+                numbersToMR.push_back(11);
+                numbersToMR.push_back(13);
+                numbersToMR.push_back(17);
+                numbersToMR.push_back(19);
+                numbersToMR.push_back(23);
+                numbersToMR.push_back(29);
+                numbersToMR.push_back(31);
+                numbersToMR.push_back(37);
+                amountOfNumbersToMr = 12;
+            }
+        }
+
+        //Przedziały spoza rozmiaru ULL. MIN 100'000'000'000'000'000'00
+        else {
+
+            vector<int> input = Integer(num1);
+
+            if (compareGreater(input, vectorForSection[2])) {
+                int randInt = rand() % 9999 + 1;
+                for (int i = 0; i < 20; i++) {
+                    numbersToMR.push_back(randInt);
+                }
+                amountOfNumbersToMr = 20;
+            }
+            else if (compareGreater(input, vectorForSection[1])) {
+                numbersToMR.push_back(2);
+                numbersToMR.push_back(3);
+                numbersToMR.push_back(5);
+                numbersToMR.push_back(7);
+                numbersToMR.push_back(11);
+                numbersToMR.push_back(13);
+                numbersToMR.push_back(17);
+                numbersToMR.push_back(19);
+                numbersToMR.push_back(23);
+                numbersToMR.push_back(29);
+                numbersToMR.push_back(31);
+                numbersToMR.push_back(37);
+                numbersToMR.push_back(41);
+                amountOfNumbersToMr = 13;
+            }
+            else if (compareGreater(input, vectorForSection[0])) {
+                numbersToMR.push_back(2);
+                numbersToMR.push_back(3);
+                numbersToMR.push_back(5);
+                numbersToMR.push_back(7);
+                numbersToMR.push_back(11);
+                numbersToMR.push_back(13);
+                numbersToMR.push_back(17);
+                numbersToMR.push_back(19);
+                numbersToMR.push_back(23);
+                numbersToMR.push_back(29);
+                numbersToMR.push_back(31);
+                numbersToMR.push_back(37);
+                amountOfNumbersToMr = 12;
+            }
+            else if (compareGreater(input, Integer("10000000000000000000"))) {
+                numbersToMR.push_back(2);
+                numbersToMR.push_back(3);
+                numbersToMR.push_back(5);
+                numbersToMR.push_back(7);
+                numbersToMR.push_back(11);
+                numbersToMR.push_back(13);
+                numbersToMR.push_back(17);
+                numbersToMR.push_back(19);
+                numbersToMR.push_back(23);
+                numbersToMR.push_back(29);
+                numbersToMR.push_back(31);
+                numbersToMR.push_back(37);
+                amountOfNumbersToMr = 12;
+            }
+        }
+
+
+    }
+
+
 
     vector<int> Integer(string s) {
         vector <int> result;
@@ -678,7 +855,8 @@ struct BigInt {
 
         for (int i = 0; i < repeats; i++) {
 
-            int a = 161;
+            int a = rand() % 2000 + 1;
+            //int a = 161;
             string A = to_string(a);
             //printVector(powerFastModulo(Integer(A), d, mod));
             if (!compareEqual(powerFastModulo(Integer(A), d, mod), one)) {
@@ -688,6 +866,45 @@ struct BigInt {
 
                     vector<int>temporary = multiply(Integer(to_string(int(pow(2, r)))), d);
                     //printVector(temporary);
+                    if (!compareEqual(powerFastModulo(Integer(A), temporary, mod), modDecrement)) {
+                        if (r == (s - 1)) {
+                            return false;
+                        }
+                    }
+                    else {
+
+                        break;
+                    }
+
+
+                }
+
+
+            }
+
+
+
+        }
+        return true;
+    }
+
+    bool checkDeterministicPrime(int s, vector<int> d, vector<int> mod) {
+        vector<int> one = ONE;
+        vector<int>modDecrement = substract(mod, one);
+
+        for (int i = 0; i < amountOfNumbersToMr; i++) {
+
+
+            int a = numbersToMR[i];
+            string A = to_string(a);
+
+            if (!compareEqual(powerFastModulo(Integer(A), d, mod), one)) {
+
+
+                for (int r = 0; r <= s; r++) {
+
+                    vector<int>temporary = multiply(Integer(to_string(int(pow(2, r)))), d);
+
                     if (!compareEqual(powerFastModulo(Integer(A), temporary, mod), modDecrement)) {
                         if (r == (s - 1)) {
                             return false;
@@ -764,6 +981,22 @@ struct BigInt {
         return result;
     }
 
+    bool checkFermatPrime(int repeats, vector<int> num1) {
+        vector<int> num1Decrement = substract(num1, ONE);
+        for (int i = 0; i < repeats; i++) {
+            int random = rand() % 5000 + 1;
+            cout << "Random " << random << endl;
+            if (compareEqual(powerFastModulo(Integer(to_string(random)), num1Decrement, num1), ONE)) {
+                continue;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
 };
 
 void test_timeMeasuring() {
@@ -825,30 +1058,45 @@ int main()
     cin >> input1;
     x.num1 = x.Integer(input1);
 
-    /* cout << "Podales: " << endl;
-     x.printVector(x.num1);
 
 
-     int s = x.findS(x.num1);
-     cout << "S wynosi: " << s << endl;
 
-     vector<int>D = x.findD(x.num1, s);
-     cout << "D wynosi: ";
-     x.printVector(D);
+    cout << "\n\nSprawdzenie twierdzeniem fermata: " << endl;
+    bool isFermatPositive = x.checkFermatPrime(10, x.num1);
 
+    if (isFermatPositive) {
+        cout << "POZYTYWNE" << endl << endl;
+        cout << "Sprawdzenie twierdzeniem Millera-Rabina: " << endl;
 
-     if (x.checkPrime(10, s, D, x.num1)) {
-         cout << "Liczba jest pierwsza." << endl;
-     }
-     else {
-         cout << "Liczba nie jest pierwsza." << endl;
-     }*/
+        x.prepareValuesForMRAlgo(input1);
 
+        int s = x.findS(x.num1);
+        cout << "S wynosi: " << s << endl;
 
-     //x.printVector(x.num1);
-     //x.printVector(x.multiply(x.num1, x.num1));
-     //x.printVector(x.multiplyAFTER(x.num1, x.num1));
-    test_timeMeasuring();
+        vector<int>D = x.findD(x.num1, s);
+        cout << "D wynosi: ";
+        x.printVector(D);
+
+        if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
+            cout << "Liczba musi byc nieparzysta." << endl;
+        }
+        else {
+            if (x.checkDeterministicPrime(s, D, x.num1)) {
+                cout << "Liczba jest pierwsza." << endl;
+            }
+            else {
+                cout << "Liczba nie jest pierwsza." << endl;
+            }
+        }
+    }
+    else {
+        cout << "Warunek fermata nie zostal spelniony." << endl;
+    }
+
+    //x.printVector(x.num1);
+    //x.printVector(x.multiply(x.num1, x.num1));
+    //x.printVector(x.multiplyAFTER(x.num1, x.num1));
+   // test_timeMeasuring();
 
     return 0;
 }
