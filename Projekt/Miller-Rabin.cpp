@@ -15,6 +15,12 @@ using namespace std;
 struct BigInt {
 
     int size = 9;
+    int base = (int)pow(10, size);
+
+    vector<int> ZERO = Integer("0");
+    vector<int> ONE = Integer("1");
+    vector<int> TWO = Integer("2");
+
 
     vector<int> num1;
     vector<int> num2;
@@ -196,9 +202,9 @@ struct BigInt {
             int temp = num1[num1.size() - 1 - i] + num2[num2.size() - 1 - i] + carry;
             carry = 0;
 
-            if (temp / pow(10, size) > 0) {
-                carry = temp / pow(10, size);
-                temp = temp % int(pow(10, size));
+            if (temp / base > 0) {
+                carry = temp / base;
+                temp = temp % base;
             }
             result[max_len - 1 - i] = temp;
 
@@ -220,9 +226,9 @@ struct BigInt {
 
                 carry = 0;
 
-                if (temp / pow(10, size) > 0) {
-                    carry = temp / pow(10, size);
-                    temp = temp % int(pow(10, size));
+                if (temp / base > 0) {
+                    carry = temp / base;
+                    temp = temp % base;
                 }
                 result[result.size() - i] = temp;
 
@@ -273,7 +279,7 @@ struct BigInt {
 
                 if (temp < 0) {
                     carry = -1;
-                    temp = temp + int(pow(10, size));
+                    temp = temp + base;
 
                 }
 
@@ -296,7 +302,7 @@ struct BigInt {
 
                     if (temp < 0) {
                         carry = -1;
-                        temp = temp + int(pow(10, size));
+                        temp = temp + base;
                     }
 
                     result[max_len - i] = temp;
@@ -315,16 +321,13 @@ struct BigInt {
 
     vector<int> multiply(vector<int>num1V, vector<int>num2V) {
 
-        vector<int>zero = Integer("0");
-        vector<int>one = Integer("1");
-
-        if (compareEqual(num1V, zero) || compareEqual(num2V, zero)) {
-            return zero;
+        if (compareEqual(num1V, ZERO) || compareEqual(num2V, ZERO)) {
+            return ZERO;
         }
-        if (compareEqual(num1V, one)) {
+        if (compareEqual(num1V, ONE)) {
             return num2V;
         }
-        if (compareEqual(num2V, one)) {
+        if (compareEqual(num2V, ONE)) {
             return num1V;
         }
 
@@ -394,19 +397,84 @@ struct BigInt {
         while (i >= 0)
             s += std::to_string(result[i--]);
 
+
         res = Integer(s);
 
         return res;
     }
 
+    vector<int> multiplyAFTER(vector<int>num1, vector<int>num2) {
+
+        vector<int>zero = Integer("0");
+        vector<int>one = Integer("1");
+
+        if (compareEqual(num1, zero) || compareEqual(num2, zero)) {
+            return zero;
+        }
+        if (compareEqual(num1, one)) {
+            return num2;
+        }
+        if (compareEqual(num2, one)) {
+            return num1;
+        }
+
+
+
+        int len1 = num1.size();
+        int len2 = num2.size();
+
+        vector<unsigned long long>result(len1 + len2, 0);
+
+        int i_n1 = 0;
+        int i_n2 = 0;
+
+        for (int i = len1 - 1; i >= 0; i--) {
+            unsigned long long carry = 0;
+            unsigned long long n1 = num1[i];
+
+            i_n2 = 0;
+
+            for (int j = len2 - 1; j >= 0; j--) {
+                unsigned long long n2 = num2[j];
+                //cout << "DZIALAM" << i << endl;
+                unsigned long long sum = n1 * n2 + result[i_n1 + i_n2] + carry;
+                //cout << "DZIALAMxD" << i << endl;
+                carry = sum / base;
+                result[i_n1 + i_n2] = sum % base;
+
+                i_n2++;
+
+            }
+
+            if (carry > 0) {
+                result[i_n1 + i_n2] += carry;
+            }
+
+            i_n1++;
+
+        }
+
+        int i = result.size() - 1;
+        while (i >= 0 && result[i] == 0)
+            i--;
+
+        string s = "";
+        while (i >= 0)
+            s += to_string(result[i--]);
+
+
+
+        return Integer(s);
+    }
+
     vector<int> divide(vector<int>num1, vector<int>num2) {
 
         int counter = 0;
-        if (compareEqual(num1, Integer("0"))) {
-            return Integer("0");
+        if (compareEqual(num1, ZERO)) {
+            return ZERO;
         }
 
-        if (compareEqual(num2, Integer("1"))) {
+        if (compareEqual(num2, ONE)) {
             return num1;
         }
         if (num1.size() == 1 && num2.size() == 1) {
@@ -415,7 +483,7 @@ struct BigInt {
         vector<int> num1Copy = num1;
         vector<int> num2Copy = num2;
 
-        if (compareEqual(num2, Integer("0"))) {
+        if (compareEqual(num2, ZERO)) {
             return num2;
         }
 
@@ -427,7 +495,7 @@ struct BigInt {
         num2Copy = transferNumberRight(num2Copy);
 
         if (compareEqual(num2Copy, num1Copy)) {
-            return Integer("1");
+            return ONE;
         }
 
 
@@ -463,27 +531,22 @@ struct BigInt {
 
         int counter = 0;
 
-        vector<int>one = Integer("1");
-        vector<int>zero = Integer("0");
-
-
-
-        if (compareEqual(num2, one)) {
-            return zero;
+        if (compareEqual(num2, ONE)) {
+            return ZERO;
         }
 
-        if (compareEqual(num1, zero)) {
-            return zero;
+        if (compareEqual(num1, ZERO)) {
+            return ZERO;
         }
-        if (compareEqual(num2, zero)) {
+        if (compareEqual(num2, ZERO)) {
             return num1;
         }
         if (compareEqual(num1, num2)) {
-            return zero;
+            return ZERO;
         }
 
-        if (compareEqual(num2, one)) {
-            return zero;
+        if (compareEqual(num2, ONE)) {
+            return ZERO;
         }
 
         if (compareGreater(num2, num1)) {
@@ -504,7 +567,7 @@ struct BigInt {
         num2Copy = transferNumberRight(num2Copy);
 
         if (compareEqual(num2Copy, num1Copy)) {
-            return zero;
+            return ZERO;
         }
 
 
@@ -512,7 +575,7 @@ struct BigInt {
 
         while (counter > 0) {
             int times = 0;
-            if (compareEqual(num1Copy, zero) || compareEqual(num2Copy, zero)) {
+            if (compareEqual(num1Copy, ZERO) || compareEqual(num2Copy, ZERO)) {
                 for (int i = counter; i >= 0; i--) {
                     temp += '0';
                     return Integer(temp);
@@ -534,9 +597,9 @@ struct BigInt {
     vector<int> exponentiationBySquaring(vector<int>a, vector<int>power, vector<int>mod) {
         vector<int> result, counter, incrementer;
 
-        counter = Integer("0");
-        incrementer = Integer("1");
-        result = Integer("1");
+        counter = ZERO;
+        incrementer = ONE;
+        result = ONE;
 
 
         a = modulo(a, mod);
@@ -554,9 +617,9 @@ struct BigInt {
 
     vector<int> power(vector<int>num1, vector<int>num2) {
         vector<int> counter, result, incrementer, check;
-        incrementer = Integer("1");
-        counter = Integer("1");
-        check = Integer("0");
+        incrementer = ONE;
+        counter = ONE;
+        check = ZERO;
         result = num1;
 
         if (compareEqual(num2, check)) {
@@ -574,7 +637,7 @@ struct BigInt {
     int findS(vector<int>num1) {
 
         int maxPow = 0;
-        vector<int> num1Decrement = substract(num1, Integer("1"));
+        vector<int> num1Decrement = substract(num1, ONE);
 
         while (true) {
             string Power = "";
@@ -583,7 +646,7 @@ struct BigInt {
 
             Power = to_string(power);
 
-            bool equal = compareEqual(modulo(num1Decrement, Integer(Power)), Integer("0"));
+            bool equal = compareEqual(modulo(num1Decrement, Integer(Power)), ZERO);
             if (equal) {
                 maxPow++;
                 continue;
@@ -598,7 +661,7 @@ struct BigInt {
     }
 
     vector<int> findD(vector<int> num1, int s) {
-        vector<int> result = divide(num1, power(Integer("2"), Integer(to_string(s))));
+        vector<int> result = divide(num1, power(TWO, Integer(to_string(s))));
         return result;
     }
 
@@ -610,21 +673,21 @@ struct BigInt {
     }
 
     bool checkPrime(int repeats, int s, vector<int> d, vector<int> mod) {
-        vector<int> one = Integer("1");
+        vector<int> one = ONE;
         vector<int>modDecrement = substract(mod, one);
 
         for (int i = 0; i < repeats; i++) {
 
             int a = 161;
             string A = to_string(a);
-
+            //printVector(powerFastModulo(Integer(A), d, mod));
             if (!compareEqual(powerFastModulo(Integer(A), d, mod), one)) {
 
 
                 for (int r = 0; r <= s; r++) {
 
                     vector<int>temporary = multiply(Integer(to_string(int(pow(2, r)))), d);
-
+                    //printVector(temporary);
                     if (!compareEqual(powerFastModulo(Integer(A), temporary, mod), modDecrement)) {
                         if (r == (s - 1)) {
                             return false;
@@ -668,7 +731,7 @@ struct BigInt {
 
     vector<int> powerFastModulo(vector<int>a, vector<int>b, vector<int>n) {
         vector<int> x = a;
-        vector<int>result = Integer("1");
+        vector<int> result = ONE;
         vector<int> bCopy = b;
 
         bool run = true;
@@ -691,12 +754,12 @@ struct BigInt {
             x = multiply(x, x);
 
 
-            if (compareEqual(b, Integer("0"))) {
+            if (compareEqual(b, ZERO)) {
                 additional = true;
             }
-            bCopy = divide(b, Integer("2"));
+            bCopy = divide(b, TWO);
 
-        } while (!compareGreater(Integer("1"), bCopy));
+        } while (!compareGreater(ONE, bCopy));
 
         return result;
     }
@@ -714,12 +777,12 @@ void test_timeMeasuring() {
     vector<int> bufor3;
     BigInt test = BigInt();
 
-    const int ilosc_powtorzen = 30;
+    const int ilosc_powtorzen = 1;
 
     long int czas[ilosc_powtorzen];
     unsigned long long suma = 0;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 20; i++) {
         bufor1 = test.Integer(przykladowe1[i]);
         bufor2 = test.Integer(przykladowe2[i]);
         bufor3 = test.Integer(przykladoMod[i]);
@@ -734,7 +797,7 @@ void test_timeMeasuring() {
             auto start = chrono::steady_clock::now();
 
             test.checkPrime(10, s, d, bufor1);
-
+            //test.add(bufor1, bufor2);
             auto end = chrono::steady_clock::now();
 
             auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start).count();
@@ -746,7 +809,7 @@ void test_timeMeasuring() {
         for (int k = 0; k < ilosc_powtorzen; k++) {
             suma += czas[k];
         }
-        cout << float(suma / ilosc_powtorzen) << endl;
+        cout << unsigned long long(suma / ilosc_powtorzen) << endl;
 
     }
 
@@ -762,28 +825,31 @@ int main()
     cin >> input1;
     x.num1 = x.Integer(input1);
 
-    cout << "Podales: " << endl;
-    x.printVector(x.num1);
+    /* cout << "Podales: " << endl;
+     x.printVector(x.num1);
 
 
-    int s = x.findS(x.num1);
-    cout << "S wynosi: " << s << endl;
+     int s = x.findS(x.num1);
+     cout << "S wynosi: " << s << endl;
 
-    vector<int>D = x.findD(x.num1, s);
-    cout << "D wynosi: ";
-    x.printVector(D);
+     vector<int>D = x.findD(x.num1, s);
+     cout << "D wynosi: ";
+     x.printVector(D);
 
 
-    if (x.checkPrime(10, s, D, x.num1)) {
-        cout << "Liczba jest pierwsza." << endl;
-    }
-    else {
-        cout << "Liczba nie jest pierwsza." << endl;
-    }
+     if (x.checkPrime(10, s, D, x.num1)) {
+         cout << "Liczba jest pierwsza." << endl;
+     }
+     else {
+         cout << "Liczba nie jest pierwsza." << endl;
+     }*/
 
-    //test_timeMeasuring();
+
+     //x.printVector(x.num1);
+     //x.printVector(x.multiply(x.num1, x.num1));
+     //x.printVector(x.multiplyAFTER(x.num1, x.num1));
+    test_timeMeasuring();
 
     return 0;
 }
-
 
