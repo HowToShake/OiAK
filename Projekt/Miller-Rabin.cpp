@@ -1,4 +1,7 @@
-﻿#include <iostream>
+﻿#include <Python.h>
+#include <conio.h>
+#include <stdio.h>     
+#include <iostream>
 #include <vector>
 #include <chrono>
 #include <cstdlib>
@@ -7,6 +10,9 @@
 #include <iterator>
 #include <sstream>
 #include <iomanip>
+
+
+#define PY_SSIZE_T_CLEAN
 
 using namespace std;
 
@@ -200,8 +206,6 @@ struct BigInt {
 
 
     }
-
-
 
     vector<int> Integer(string s) {
         vector <int> result;
@@ -1049,6 +1053,34 @@ void test_timeMeasuring() {
 
 }
 
+void callPythonMethod(string input1) {
+
+    Py_Initialize();
+
+    PyObject* pModule = PyImport_ImportModule("AKS");
+    PyObject* pValue;
+
+    PyObject* number = Py_BuildValue("s", input1);
+
+
+    if (pModule) {
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "Aks");
+
+        if (pFunc && PyCallable_Check(pFunc)) {
+            pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+        }
+        else {
+            cout << "ERROR: FUNCTION HEJKA()" << endl;
+        }
+
+    }
+    else {
+        cout << "ERROR: MODULE NOT IMPORTED" << endl;
+    }
+
+    Py_Finalize();
+}
+
 int main()
 {
     srand(time(NULL));
@@ -1057,9 +1089,6 @@ int main()
     cout << "Podaj liczbe: " << endl;
     cin >> input1;
     x.num1 = x.Integer(input1);
-
-
-
 
     cout << "\n\nSprawdzenie twierdzeniem fermata: " << endl;
     bool isFermatPositive = x.checkFermatPrime(10, x.num1);
@@ -1096,7 +1125,10 @@ int main()
     //x.printVector(x.num1);
     //x.printVector(x.multiply(x.num1, x.num1));
     //x.printVector(x.multiplyAFTER(x.num1, x.num1));
-   // test_timeMeasuring();
+    //test_timeMeasuring();
+
+    callPythonMethod(input1);
+    cout << "KUUUNIEC\n\n" << endl;
 
     return 0;
 }
