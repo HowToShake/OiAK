@@ -7,7 +7,7 @@ def generateOddNumber():
 
 
 #n = generateOddNumber()
-n = int(input("Podaj liczbe: "))
+#n = int(input("Podaj liczbe: "))
 def maxPower(number):
     maximumPower = 0
 
@@ -35,20 +35,20 @@ def FME(a, k, n):
         x  %= n
     return r
 
-print('Liczba wylosowana: ')
-print(n)
+#print('Liczba wylosowana: ')
+#print(n)
 
-print('Liczba s: ')
-s = maxPower(n)
-print(s)
+#print('Liczba s: ')
+#s = maxPower(n)
+#print(s)
 
-print('Liczba d: ')
-d = n//(2**s)
-print(d)
+#print('Liczba d: ')
+#d = n//(2**s)
+#print(d)
 
-k = 10 #dokladnosc testu
+#k = 10 #dokladnosc testu
 
-def checkPrime():
+def checkPrime(n,s,d,k):
 
     for i in range(0, k, 1):
         
@@ -63,15 +63,25 @@ def checkPrime():
                 if(FME(a,temporary,n) != (n-1)):
                     if( r == (s-1)):
                         return False
-                if(FME(a,temporary,n) == (n-1)):
+                else:
                     break
     
     return True
 
-start = time.time()
-x = checkPrime()
-end = time.time()
+#start = time.time()
+#x = checkPrime()
+#end = time.time()
 
-print('Czas trwania to :' ,end-start,'s . Czy liczba jest pierwsza?', x)
-v=input()
+#print('Czas trwania to :' ,end-start,'s . Czy liczba jest pierwsza?', x)
+#v=input()
 
+def MillerRabin(args):
+    n = int(args)
+    s = maxPower(n)
+    d = n//(2**s)
+    k = 10
+    result = checkPrime(n,s,d,k)
+    if(result == True):
+        print('Liczba jest pierwsza.')
+    else:
+        print('Liczba nie jest pierwsza.')

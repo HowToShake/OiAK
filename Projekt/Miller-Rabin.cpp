@@ -11,9 +11,6 @@
 #include <sstream>
 #include <iomanip>
 
-
-#define PY_SSIZE_T_CLEAN
-
 using namespace std;
 
 struct BigInt {
@@ -1053,21 +1050,24 @@ void test_timeMeasuring() {
 
 }
 
-void callPythonMethod(string input1) {
+void callPythonAKSFunction(string input1) {
+    //cout << "Otrzymana liczba do Pythona: " << input1 << endl;
 
     Py_Initialize();
 
     PyObject* pModule = PyImport_ImportModule("AKS");
     PyObject* pValue;
 
-    PyObject* number = Py_BuildValue("s", input1);
-
 
     if (pModule) {
         PyObject* pFunc = PyObject_GetAttrString(pModule, "Aks");
 
+
+
         if (pFunc && PyCallable_Check(pFunc)) {
+
             pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+            //pValue = PyObject_CallFunction(pFunc,NULL);
         }
         else {
             cout << "ERROR: FUNCTION HEJKA()" << endl;
@@ -1081,54 +1081,136 @@ void callPythonMethod(string input1) {
     Py_Finalize();
 }
 
-int main()
-{
-    srand(time(NULL));
-    BigInt x = BigInt();
-    string input1;
-    cout << "Podaj liczbe: " << endl;
-    cin >> input1;
-    x.num1 = x.Integer(input1);
+void callPythonMRFunction(string input1) {
+    //cout << "Otrzymana liczba do Pythona: " << input1 << endl;
 
-    cout << "\n\nSprawdzenie twierdzeniem fermata: " << endl;
-    bool isFermatPositive = x.checkFermatPrime(10, x.num1);
+    Py_Initialize();
 
-    if (isFermatPositive) {
-        cout << "POZYTYWNE" << endl << endl;
-        cout << "Sprawdzenie twierdzeniem Millera-Rabina: " << endl;
+    PyObject* pModule = PyImport_ImportModule("Miller-Rabin");
+    PyObject* pValue;
 
-        x.prepareValuesForMRAlgo(input1);
 
-        int s = x.findS(x.num1);
-        cout << "S wynosi: " << s << endl;
+    if (pModule) {
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "MillerRabin");
 
-        vector<int>D = x.findD(x.num1, s);
-        cout << "D wynosi: ";
-        x.printVector(D);
 
-        if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
-            cout << "Liczba musi byc nieparzysta." << endl;
+
+        if (pFunc && PyCallable_Check(pFunc)) {
+
+            pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+            //pValue = PyObject_CallFunction(pFunc,NULL);
         }
         else {
-            if (x.checkDeterministicPrime(s, D, x.num1)) {
-                cout << "Liczba jest pierwsza." << endl;
-            }
-            else {
-                cout << "Liczba nie jest pierwsza." << endl;
-            }
+            cout << "ERROR: FUNCTION HEJKA()" << endl;
         }
+
     }
     else {
-        cout << "Warunek fermata nie zostal spelniony." << endl;
+        cout << "ERROR: MODULE NOT IMPORTED" << endl;
     }
 
-    //x.printVector(x.num1);
-    //x.printVector(x.multiply(x.num1, x.num1));
-    //x.printVector(x.multiplyAFTER(x.num1, x.num1));
-    //test_timeMeasuring();
+    Py_Finalize();
+}
 
-    callPythonMethod(input1);
-    cout << "KUUUNIEC\n\n" << endl;
+void printMessageIsPrime(bool result) {
+    if (result == true) {
+        cout << "Liczba jest pierwsza." << endl;
+    }
+    else {
+        cout << "Liczba nie jest pierwsza." << endl;
+    }
+}
+
+void menu() {
+    srand(time(NULL));
+    BigInt x = BigInt();
+    string input;
+    cout << "Podaj liczbe do przeprowadzenia testu pierwszosci: " << endl;
+    cin >> input;
+    x.num1 = x.Integer(input);
+
+    if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
+        cout << "\nPodana liczba musi byc nieparzysta!" << endl;
+        exit(0);
+    }
+
+    cout << "\nDostepne opcje: " << endl;
+    cout << "0. - Wyjscie z programu." << endl;
+    cout << "1. - Test pierwszosci Fermata (C++)." << endl;
+    cout << "2. - Test pierwszosci Millera-Rabina (C++)." << endl;
+    cout << "3. - Test pierwszosci Millera-Rabina (Python)." << endl;
+    cout << "4. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
+    cout << "5. - Test pierwszosci AKS (Python)." << endl;
+    cout << "\nProsze wybrac opcje: " << endl;
+    int wybor;
+    cin >> wybor;
+    cout << "\n\n";
+    switch (wybor) {
+    case 0: {
+        cout << "Dzikuje za skorzystanie z programu." << endl;
+        exit(0);
+        break;
+    }
+    case 1: {
+        bool isFermatPositive = x.checkFermatPrime(10, x.num1);
+        printMessageIsPrime(isFermatPositive);
+        break;
+    }
+    case 2: {
+        int s = x.findS(x.num1);
+        vector<int> d = x.findD(x.num1, s);
+
+        bool isMillerRabinPrime = x.checkPrime(10, s, d, x.num1);
+        printMessageIsPrime(isMillerRabinPrime);
+        break;
+    }
+    case 3: {
+        callPythonMRFunction(input);
+        break;
+    }
+    case 4: {
+        x.prepareValuesForMRAlgo(input);
+        int s = x.findS(x.num1);
+        vector<int> d = x.findD(x.num1, s);
+
+        bool isDeterministicMRPrime = x.checkDeterministicPrime(s, d, x.num1);
+        printMessageIsPrime(isDeterministicMRPrime);
+        break;
+    }
+    case 5: {
+        cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
+            << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
+            << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
+            << "co najmniej 3.8. \n" << endl;
+        cout << "Jesli chcesz kontynuowac uruchomienie programu w powloce systemowej wybierz 't'.\nJesli chcesz wrocic do menu wyboru algorytmu wybierz 'n'." << endl;
+
+        bool poprawny_znak = true;
+        while (poprawny_znak) {
+            char wybor;
+            cin >> wybor;
+
+            if (wybor == 't') {
+                callPythonAKSFunction(input);
+                poprawny_znak = false;
+            }
+            else if (wybor == 'n') {
+                poprawny_znak = false;
+            }
+            else {
+                cout << "Prosze wybrac odpowiednia opcje." << endl;
+            }
+        }
+
+    }
+
+    }
+
+
+}
+
+int main() {
+
+    menu();
 
     return 0;
 }
