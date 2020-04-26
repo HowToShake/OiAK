@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <string>
 #include <random>
+#include <cmath>
 
 using namespace std;
 
@@ -687,23 +688,25 @@ struct BigInt {
 
         while (counter > 0) { // BYŁO: counter > 0
             int times = 0;
-            if (compareEqual(num1Copy, ONE) || compareEqual(num2Copy, ONE)) { // ONE = vector<int>(1, 0)
-                for (int i = counter; i >= 0; i--) {
+            if (compareEqual(num1Copy, ZERO) || compareEqual(num2Copy, ZERO)) {
+                // cout << "\n\nCOUNTER " << counter << endl;
+                for (int i = counter; i > 0; i--) {
                     temp += '0';
-                    return Integer(temp);
+
                 }
+                return Integer(temp);
             }
 
             while (compareGreater(num1Copy, num2Copy) || compareEqual(num1Copy, num2Copy)) {
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
-                //printVector(num1Copy);
             }
 
             temp += to_string(times);
-            //cout << "TEMP: " << temp << endl;
+            // cout << "TEMP: " << temp << endl;
             counter--;
             num2Copy = transferNumberRight(num2Copy);
+
         }
 
         if (temp == "") {
@@ -749,7 +752,7 @@ struct BigInt {
             num2Copy = transferNumberLeft(num2Copy);
             counter++;
         }
-
+        //cout << "COUNTER: " << counter << endl;
         num2Copy = transferNumberRight(num2Copy);
 
         if (compareEqual(num2Copy, num1Copy)) {
@@ -760,23 +763,40 @@ struct BigInt {
         string temp = "";
 
         while (counter > 0) {
+
             int times = 0;
             if (compareEqual(num1Copy, ZERO) || compareEqual(num2Copy, ZERO)) {
                 for (int i = counter; i >= 0; i--) {
                     temp += '0';
-                    return Integer(temp);
+                    return num1Copy;
                 }
             }
 
             while (compareGreater(num1Copy, num2Copy) || compareEqual(num1Copy, num2Copy)) {
+                /* cout << "\n\n\n";
+                 for (int i = 0; i < num1Copy.size(); i++) {
+                     cout << num1Copy[i] << " ";
+                 }
+                 cout << "\nNUM2 " << endl;
+                 for (int i = 0; i < num2Copy.size(); i++) {
+                     cout << num2Copy[i] << " ";
+                 }*/
+                 //cout << endl;
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
             }
 
             temp += to_string(times);
             counter--;
+
             num2Copy = transferNumberRight(num2Copy);
+
+
+
         }
+
+        //cout << "OSTATNIE" << endl;
+
         return num1Copy;
     }
 
@@ -853,7 +873,7 @@ struct BigInt {
 
     void printVector(vector<int>A) {
         for (int i = 0; i < A.size(); i++) {
-            cout << A[i] << "";
+            cout << A[i] << " ";
         }
         cout << endl;
     }
@@ -962,30 +982,45 @@ struct BigInt {
 
         bool run = true;
         bool additional = false;
+        int counter = 0;
         do {
 
             b = bCopy;
-
-            x = modulo(x, n);
-
-            if (b[b.size() - 1] & 1) {
+            /*         cout << "\nPRZED X " << endl;
+                     printVector(b);*/
+                     //cout << "\n\n\n";
+                     //printVector(b);
+                     //cout << "\n\n\n";
+            if (b[b.size() - 1] % 2 == 1) {
+                //cout << "\nCOUNTER: " << counter<<endl;
+                /*cout << "\nX " << endl;
+                printVector(x);
+                cout << "\nPRZED MNOZENIEM ";
+                printVector(result);*/
 
                 result = multiply(result, x);
 
+                //cout << "\nPRZED MODULO ";
+                //printVector(result);
 
                 result = modulo(result, n);
+
+                /*cout << "\nPO MODULO ";*/
+                //printVector(result);
 
             }
 
             x = multiply(x, x);
-
+            x = modulo(x, n);
+            bCopy = divide(b, TWO);
 
             if (compareEqual(b, ZERO)) {
                 additional = true;
             }
-            bCopy = divide(b, TWO);
 
+            counter++;
         } while (!compareGreater(ONE, bCopy));
+        //cout << "\nMAIN COUNTER: " << counter<<endl;
 
         return result;
     }
@@ -1039,7 +1074,7 @@ void test_timeMeasuring() {
             auto start = chrono::steady_clock::now();
 
             //test.checkPrime(10, s, d, bufor1);
-            test.printVector(test.divide(bufor1, bufor2));
+            test.printVector(test.substract(bufor1, bufor2));
             auto end = chrono::steady_clock::now();
 
             auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start).count();
