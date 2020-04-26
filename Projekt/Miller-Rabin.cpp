@@ -7,9 +7,6 @@
 #include <cstdlib>
 #include <string>
 #include <random>
-#include <iterator>
-#include <sstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -649,19 +646,27 @@ struct BigInt {
 
         int counter = 0;
         if (compareEqual(num1, ZERO)) {
+            //cout << "Pierwsza liczba to zero" << endl;
             return ZERO;
         }
 
         if (compareEqual(num2, ONE)) {
+            //cout << "Druga liczba to 1" << endl;
             return num1;
         }
         if (num1.size() == 1 && num2.size() == 1) {
+            //cout << "Liczby sa jednakowej dlugosci" << endl;
             return Integer(to_string(num1[0] / num2[0]));
+        }
+
+        if (compareEqual(num1, num2)) {
+            return ONE;
         }
         vector<int> num1Copy = num1;
         vector<int> num2Copy = num2;
 
         if (compareEqual(num2, ZERO)) {
+            //cout << "Druga liczba to zero" << endl;
             return num2;
         }
 
@@ -680,9 +685,9 @@ struct BigInt {
         string temp = "";
 
 
-        while (counter > 0) {
+        while (counter > 0) { // BYŁO: counter > 0
             int times = 0;
-            if (compareEqual(num1Copy, vector<int>(1, 0)) || compareEqual(num2Copy, vector<int>(1, 0))) {
+            if (compareEqual(num1Copy, ONE) || compareEqual(num2Copy, ONE)) { // ONE = vector<int>(1, 0)
                 for (int i = counter; i >= 0; i--) {
                     temp += '0';
                     return Integer(temp);
@@ -692,8 +697,11 @@ struct BigInt {
             while (compareGreater(num1Copy, num2Copy) || compareEqual(num1Copy, num2Copy)) {
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
+                //printVector(num1Copy);
             }
+
             temp += to_string(times);
+            //cout << "TEMP: " << temp << endl;
             counter--;
             num2Copy = transferNumberRight(num2Copy);
         }
@@ -1025,13 +1033,13 @@ void test_timeMeasuring() {
 
         for (int j = 0; j < ilosc_powtorzen; j++) {
 
-            int s = test.findS(bufor1);
-            vector<int> d = test.findD(bufor1, s);
+            //int s = test.findS(bufor1);
+            //vector<int> d = test.findD(bufor1, s);
 
             auto start = chrono::steady_clock::now();
 
-            test.checkPrime(10, s, d, bufor1);
-            //test.add(bufor1, bufor2);
+            //test.checkPrime(10, s, d, bufor1);
+            test.printVector(test.divide(bufor1, bufor2));
             auto end = chrono::steady_clock::now();
 
             auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start).count();
@@ -1125,83 +1133,99 @@ void menu() {
     srand(time(NULL));
     BigInt x = BigInt();
     string input;
-    cout << "Podaj liczbe do przeprowadzenia testu pierwszosci: " << endl;
-    cin >> input;
-    x.num1 = x.Integer(input);
 
-    if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
-        cout << "\nPodana liczba musi byc nieparzysta!" << endl;
-        exit(0);
-    }
+    bool program = true;
+    while (program) {
+        cout << "Podaj liczbe do przeprowadzenia testu pierwszosci: " << endl;
+        cin >> input;
+        x.num1 = x.Integer(input);
 
-    cout << "\nDostepne opcje: " << endl;
-    cout << "0. - Wyjscie z programu." << endl;
-    cout << "1. - Test pierwszosci Fermata (C++)." << endl;
-    cout << "2. - Test pierwszosci Millera-Rabina (C++)." << endl;
-    cout << "3. - Test pierwszosci Millera-Rabina (Python)." << endl;
-    cout << "4. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
-    cout << "5. - Test pierwszosci AKS (Python)." << endl;
-    cout << "\nProsze wybrac opcje: " << endl;
-    int wybor;
-    cin >> wybor;
-    cout << "\n\n";
-    switch (wybor) {
-    case 0: {
-        cout << "Dzikuje za skorzystanie z programu." << endl;
-        exit(0);
-        break;
-    }
-    case 1: {
-        bool isFermatPositive = x.checkFermatPrime(10, x.num1);
-        printMessageIsPrime(isFermatPositive);
-        break;
-    }
-    case 2: {
-        int s = x.findS(x.num1);
-        vector<int> d = x.findD(x.num1, s);
+        if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
+            cout << "\nPodana liczba musi byc nieparzysta!" << endl;
 
-        bool isMillerRabinPrime = x.checkPrime(10, s, d, x.num1);
-        printMessageIsPrime(isMillerRabinPrime);
-        break;
-    }
-    case 3: {
-        callPythonMRFunction(input);
-        break;
-    }
-    case 4: {
-        x.prepareValuesForMRAlgo(input);
-        int s = x.findS(x.num1);
-        vector<int> d = x.findD(x.num1, s);
+        }
+        else {
 
-        bool isDeterministicMRPrime = x.checkDeterministicPrime(s, d, x.num1);
-        printMessageIsPrime(isDeterministicMRPrime);
-        break;
-    }
-    case 5: {
-        cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
-            << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
-            << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
-            << "co najmniej 3.8. \n" << endl;
-        cout << "Jesli chcesz kontynuowac uruchomienie programu w powloce systemowej wybierz 't'.\nJesli chcesz wrocic do menu wyboru algorytmu wybierz 'n'." << endl;
-
-        bool poprawny_znak = true;
-        while (poprawny_znak) {
-            char wybor;
+            cout << "\nDostepne opcje: " << endl;
+            cout << "0. - Wyjscie z programu." << endl;
+            cout << "1. - Test pierwszosci Fermata (C++)." << endl;
+            cout << "2. - Test pierwszosci Millera-Rabina (C++)." << endl;
+            cout << "3. - Test pierwszosci Millera-Rabina (Python)." << endl;
+            cout << "4. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
+            cout << "5. - Test pierwszosci AKS (Python)." << endl;
+            cout << "\nProsze wybrac opcje: " << endl;
+            int wybor;
             cin >> wybor;
+            cout << "\n\n";
+            switch (wybor) {
+            case 0: {
+                cout << "Dzikuje za skorzystanie z programu." << endl;
+                exit(0);
+                break;
+            }
+            case 1: {
+                bool isFermatPositive = x.checkFermatPrime(10, x.num1);
+                printMessageIsPrime(isFermatPositive);
+                break;
+            }
+            case 2: {
+                int s = x.findS(x.num1);
+                vector<int> d = x.findD(x.num1, s);
 
-            if (wybor == 't') {
-                callPythonAKSFunction(input);
-                poprawny_znak = false;
+                bool isMillerRabinPrime = x.checkPrime(10, s, d, x.num1);
+                printMessageIsPrime(isMillerRabinPrime);
+                break;
             }
-            else if (wybor == 'n') {
-                poprawny_znak = false;
+            case 3: {
+                callPythonMRFunction(input);
+                break;
             }
-            else {
-                cout << "Prosze wybrac odpowiednia opcje." << endl;
+            case 4: {
+                x.prepareValuesForMRAlgo(input);
+                int s = x.findS(x.num1);
+                vector<int> d = x.findD(x.num1, s);
+
+                bool isDeterministicMRPrime = x.checkDeterministicPrime(s, d, x.num1);
+                printMessageIsPrime(isDeterministicMRPrime);
+                break;
+            }
+            case 5: {
+                cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
+                    << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
+                    << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
+                    << "co najmniej 3.8. \n" << endl;
+                cout << "Jesli chcesz kontynuowac uruchomienie programu w powloce systemowej wybierz 't'.\nJesli chcesz wrocic do menu wyboru algorytmu wybierz 'n'." << endl;
+
+                bool poprawny_znak = true;
+                while (poprawny_znak) {
+                    char wybor;
+                    cin >> wybor;
+
+                    if (wybor == 't') {
+                        callPythonAKSFunction(input);
+                        poprawny_znak = false;
+                    }
+                    else if (wybor == 'n') {
+                        poprawny_znak = false;
+                    }
+                    else {
+                        cout << "Prosze wybrac odpowiednia opcje." << endl;
+                    }
+                }
+
+            }
             }
         }
-
-    }
+        cout << "\n\nW celu wprowadzenia nowej liczby wciśnij 't'.\n";
+        cout << "W celu wyjscia z programu wybierz dowolny znak. \n";
+        char powtorz;
+        cin >> powtorz;
+        if (powtorz == 't') {
+            //
+        }
+        else {
+            program = false;
+        }
 
     }
 
