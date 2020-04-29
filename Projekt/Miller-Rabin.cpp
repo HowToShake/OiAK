@@ -19,6 +19,7 @@ struct BigInt {
     vector<int> ZERO = Integer("0");
     vector<int> ONE = Integer("1");
     vector<int> TWO = Integer("2");
+    vector<int> THREE = Integer("3");
 
     vector<int> num1;
     vector<int> num2;
@@ -1041,6 +1042,71 @@ struct BigInt {
 
     }
 
+    //bool checkSolovayaStrassenPrime(vector<int>num1, int repeats) {
+    //    vector<int> num1Dec = substract(num1, ONE);
+    //    vector<int> halfNum1Dec = divide(num1Dec, TWO);
+    //    for (int i = 0; i < repeats; i++) {
+    //        int a = rand() % 1000 + 2;
+    //        vector<int>A = Integer(to_string(a));
+    //        vector<int>x = divide(A, num1);
+
+    //        bool firstCondition = compareEqual(x, ZERO);
+    //        bool secondCondition = compareEqual(powerFastModulo(A,halfNum1Dec,num1),x);
+    //        if (firstCondition || secondCondition) {
+    //            return false;
+    //        }
+    //        else {
+    //            continue;
+    //        }
+    //    }
+    //    return true;
+    //}
+
+    //vector<int> generateRandom(vector<int> maxRange) {
+
+    //    string range = ToString(maxRange);
+
+
+    //    random_device device;
+    //    mt19937 generator(device());
+    //    uniform_int_distribution<int> distribution(2, 9);
+
+    //    string result = "";
+
+    //    int randomSize = rand() % (range.length() - 1) + 1;
+
+    //    for (int i = 0; i < randomSize ; i++) {
+    //        result += to_string(distribution(generator));
+    //    }
+
+
+    //    char last = range[0];
+
+
+    //    int nume = int(last - '0');
+
+    //    int lastNum = (rand() % nume ) + 1;
+
+
+
+    //    if (lastNum == int(last - '0')) {
+    //        lastNum--;
+    //    }
+
+    //    if (lastNum != 0) {
+    //        result += to_string(lastNum);
+    //    }
+
+
+
+    //    
+
+    //    reverse(result.begin(), result.end());
+    //   
+    //    return Integer(result);
+
+    //}
+
 };
 
 void test_timeMeasuring() {
@@ -1180,6 +1246,34 @@ void callPythonMRDeterministicFunction(string input1) {
     Py_Finalize();
 }
 
+void callPythonFermatFunction(string input1) {
+    Py_Initialize();
+
+    PyObject* pModule = PyImport_ImportModule("Fermat");
+    PyObject* pValue;
+
+
+    if (pModule) {
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "fermat");
+
+
+
+        if (pFunc && PyCallable_Check(pFunc)) {
+
+            pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+        }
+        else {
+            cout << "ERROR: FUNCTION()" << endl;
+        }
+
+    }
+    else {
+        cout << "ERROR: MODULE NOT IMPORTED" << endl;
+    }
+
+    Py_Finalize();
+}
+
 void printMessageIsPrime(bool result) {
     if (result == true) {
         cout << "Liczba jest pierwsza." << endl;
@@ -1209,11 +1303,12 @@ void menu() {
             cout << "\nDostepne opcje: " << endl;
             cout << "0. - Wyjscie z programu." << endl;
             cout << "1. - Test pierwszosci Fermata (C++)." << endl;
-            cout << "2. - Test pierwszosci Millera-Rabina (C++)." << endl;
-            cout << "3. - Test pierwszosci Millera-Rabina (Python)." << endl;
-            cout << "4. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
-            cout << "5. - Test pierwszosci Millera-Rabina w wersji deterministycznej (Python)." << endl;
-            cout << "6. - Test pierwszosci AKS (Python)." << endl;
+            cout << "2. - Test pierwszosci Fermata (Python)." << endl;
+            cout << "3. - Test pierwszosci Millera-Rabina (C++)." << endl;
+            cout << "4. - Test pierwszosci Millera-Rabina (Python)." << endl;
+            cout << "5. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
+            cout << "6. - Test pierwszosci Millera-Rabina w wersji deterministycznej (Python)." << endl;
+            cout << "7. - Test pierwszosci AKS (Python)." << endl;
             cout << "\nProsze wybrac opcje: " << endl;
             int wybor;
             cin >> wybor;
@@ -1230,6 +1325,10 @@ void menu() {
                 break;
             }
             case 2: {
+                callPythonFermatFunction(input);
+                break;
+            }
+            case 3: {
                 int s = x.findS(x.num1);
                 vector<int> d = x.findD(x.num1, s);
 
@@ -1237,11 +1336,11 @@ void menu() {
                 printMessageIsPrime(isMillerRabinPrime);
                 break;
             }
-            case 3: {
+            case 4: {
                 callPythonMRFunction(input);
                 break;
             }
-            case 4: {
+            case 5: {
                 x.prepareValuesForMRAlgo(input);
                 int s = x.findS(x.num1);
                 vector<int> d = x.findD(x.num1, s);
@@ -1250,11 +1349,11 @@ void menu() {
                 printMessageIsPrime(isDeterministicMRPrime);
                 break;
             }
-            case 5: {
+            case 6: {
                 callPythonMRDeterministicFunction(input);
                 break;
             }
-            case 6: {
+            case 7: {
                 cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
                     << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
                     << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
@@ -1300,6 +1399,7 @@ void menu() {
 int main() {
 
     menu();
+
 
     return 0;
 }
