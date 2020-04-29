@@ -1029,7 +1029,7 @@ struct BigInt {
         vector<int> num1Decrement = substract(num1, ONE);
         for (int i = 0; i < repeats; i++) {
             int random = rand() % 5000 + 1;
-            cout << "Random " << random << endl;
+            //cout << "Random " << random << endl;
             if (compareEqual(powerFastModulo(Integer(to_string(random)), num1Decrement, num1), ONE)) {
                 continue;
             }
@@ -1125,11 +1125,9 @@ void callPythonAKSFunction(string input1) {
 }
 
 void callPythonMRFunction(string input1) {
-    //cout << "Otrzymana liczba do Pythona: " << input1 << endl;
-
     Py_Initialize();
 
-    PyObject* pModule = PyImport_ImportModule("Miller-Rabin");
+    PyObject* pModule = PyImport_ImportModule("MillerRabin");
     PyObject* pValue;
 
 
@@ -1141,10 +1139,37 @@ void callPythonMRFunction(string input1) {
         if (pFunc && PyCallable_Check(pFunc)) {
 
             pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
-            //pValue = PyObject_CallFunction(pFunc,NULL);
         }
         else {
-            cout << "ERROR: FUNCTION HEJKA()" << endl;
+            cout << "ERROR: FUNCTION()" << endl;
+        }
+
+    }
+    else {
+        cout << "ERROR: MODULE NOT IMPORTED" << endl;
+    }
+
+    Py_Finalize();
+}
+
+void callPythonMRDeterministicFunction(string input1) {
+    Py_Initialize();
+
+    PyObject* pModule = PyImport_ImportModule("MillerRabinDeterministic");
+    PyObject* pValue;
+
+
+    if (pModule) {
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "MillerRabinDeterministic");
+
+
+
+        if (pFunc && PyCallable_Check(pFunc)) {
+
+            pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+        }
+        else {
+            cout << "ERROR: FUNCTION()" << endl;
         }
 
     }
@@ -1187,7 +1212,8 @@ void menu() {
             cout << "2. - Test pierwszosci Millera-Rabina (C++)." << endl;
             cout << "3. - Test pierwszosci Millera-Rabina (Python)." << endl;
             cout << "4. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
-            cout << "5. - Test pierwszosci AKS (Python)." << endl;
+            cout << "5. - Test pierwszosci Millera-Rabina w wersji deterministycznej (Python)." << endl;
+            cout << "6. - Test pierwszosci AKS (Python)." << endl;
             cout << "\nProsze wybrac opcje: " << endl;
             int wybor;
             cin >> wybor;
@@ -1225,6 +1251,10 @@ void menu() {
                 break;
             }
             case 5: {
+                callPythonMRDeterministicFunction(input);
+                break;
+            }
+            case 6: {
                 cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
                     << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
                     << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
