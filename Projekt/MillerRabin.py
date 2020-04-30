@@ -22,17 +22,18 @@ def maxPower(number):
 
 
 def FME(a, k, n):
-    b = bin(k)[2:] # list of bits
+    b = bin(k)[2:] #list of bits
     m = len(b)
-    r = 1 # result
+    r = 1 #result
     x = a % n
  
-    for i in range(m - 1, -1, -1):
+    for i in range(m - 1, -1, -1):#for(int i = m-1; i>=0; i--)
         if b[i] == '1':
             r = r * x % n
- 
+            #print(r)
         x **= 2
         x  %= n
+        #print(i)
     return r
 
 #print('Liczba wylosowana: ')
@@ -85,3 +86,6 @@ def MillerRabin(args):
         print('Liczba jest pierwsza.')
     else:
         print('Liczba nie jest pierwsza.')
+
+def Test():
+    FME(1000000000000000000000000000000000000000000000000121,1000000000000000000000000000000000000000000000000121,123235151235325215)

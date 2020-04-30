@@ -580,70 +580,6 @@ struct BigInt {
         return res;
     }
 
-    vector<int> multiplyAFTER(vector<int>num1, vector<int>num2) {
-
-        vector<int>zero = Integer("0");
-        vector<int>one = Integer("1");
-
-        if (compareEqual(num1, zero) || compareEqual(num2, zero)) {
-            return zero;
-        }
-        if (compareEqual(num1, one)) {
-            return num2;
-        }
-        if (compareEqual(num2, one)) {
-            return num1;
-        }
-
-
-
-        int len1 = num1.size();
-        int len2 = num2.size();
-
-        vector<unsigned long long>result(len1 + len2, 0);
-
-        int i_n1 = 0;
-        int i_n2 = 0;
-
-        for (int i = len1 - 1; i >= 0; i--) {
-            unsigned long long carry = 0;
-            unsigned long long n1 = num1[i];
-
-            i_n2 = 0;
-
-            for (int j = len2 - 1; j >= 0; j--) {
-                unsigned long long n2 = num2[j];
-                //cout << "DZIALAM" << i << endl;
-                unsigned long long sum = n1 * n2 + result[i_n1 + i_n2] + carry;
-                //cout << "DZIALAMxD" << i << endl;
-                carry = sum / base;
-                result[i_n1 + i_n2] = sum % base;
-
-                i_n2++;
-
-            }
-
-            if (carry > 0) {
-                result[i_n1 + i_n2] += carry;
-            }
-
-            i_n1++;
-
-        }
-
-        int i = result.size() - 1;
-        while (i >= 0 && result[i] == 0)
-            i--;
-
-        string s = "";
-        while (i >= 0)
-            s += to_string(result[i--]);
-
-
-
-        return Integer(s);
-    }
-
     vector<int> divide(vector<int>num1, vector<int>num2) {
 
         int counter = 0;
@@ -1042,71 +978,6 @@ struct BigInt {
 
     }
 
-    //bool checkSolovayaStrassenPrime(vector<int>num1, int repeats) {
-    //    vector<int> num1Dec = substract(num1, ONE);
-    //    vector<int> halfNum1Dec = divide(num1Dec, TWO);
-    //    for (int i = 0; i < repeats; i++) {
-    //        int a = rand() % 1000 + 2;
-    //        vector<int>A = Integer(to_string(a));
-    //        vector<int>x = divide(A, num1);
-
-    //        bool firstCondition = compareEqual(x, ZERO);
-    //        bool secondCondition = compareEqual(powerFastModulo(A,halfNum1Dec,num1),x);
-    //        if (firstCondition || secondCondition) {
-    //            return false;
-    //        }
-    //        else {
-    //            continue;
-    //        }
-    //    }
-    //    return true;
-    //}
-
-    //vector<int> generateRandom(vector<int> maxRange) {
-
-    //    string range = ToString(maxRange);
-
-
-    //    random_device device;
-    //    mt19937 generator(device());
-    //    uniform_int_distribution<int> distribution(2, 9);
-
-    //    string result = "";
-
-    //    int randomSize = rand() % (range.length() - 1) + 1;
-
-    //    for (int i = 0; i < randomSize ; i++) {
-    //        result += to_string(distribution(generator));
-    //    }
-
-
-    //    char last = range[0];
-
-
-    //    int nume = int(last - '0');
-
-    //    int lastNum = (rand() % nume ) + 1;
-
-
-
-    //    if (lastNum == int(last - '0')) {
-    //        lastNum--;
-    //    }
-
-    //    if (lastNum != 0) {
-    //        result += to_string(lastNum);
-    //    }
-
-
-
-    //    
-
-    //    reverse(result.begin(), result.end());
-    //   
-    //    return Integer(result);
-
-    //}
-
 };
 
 void test_timeMeasuring() {
@@ -1385,7 +1256,7 @@ void menu() {
         char powtorz;
         cin >> powtorz;
         if (powtorz == 't') {
-            //
+
         }
         else {
             program = false;
@@ -1399,7 +1270,6 @@ void menu() {
 int main() {
 
     menu();
-
 
     return 0;
 }
