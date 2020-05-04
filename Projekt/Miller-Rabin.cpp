@@ -612,7 +612,7 @@ struct BigInt {
             num2Copy = transferNumberLeft(num2Copy);
             counter++;
         }
-
+        
         num2Copy = transferNumberRight(num2Copy);
 
         if (compareEqual(num2Copy, num1Copy)) {
@@ -625,11 +625,11 @@ struct BigInt {
 
         while (counter > 0) { // BYŁO: counter > 0
             int times = 0;
-            if (compareEqual(num1Copy, ZERO) || compareEqual(num2Copy, ZERO)) {
-                // cout << "\n\nCOUNTER " << counter << endl;
+            if (compareEqual(num1Copy,ZERO) || compareEqual(num2Copy, ZERO)) { 
+               // cout << "\n\nCOUNTER " << counter << endl;
                 for (int i = counter; i > 0; i--) {
                     temp += '0';
-
+                    
                 }
                 return Integer(temp);
             }
@@ -638,12 +638,12 @@ struct BigInt {
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
             }
-
+            
             temp += to_string(times);
-            // cout << "TEMP: " << temp << endl;
+           // cout << "TEMP: " << temp << endl;
             counter--;
             num2Copy = transferNumberRight(num2Copy);
-
+    
         }
 
         if (temp == "") {
@@ -710,30 +710,30 @@ struct BigInt {
             }
 
             while (compareGreater(num1Copy, num2Copy) || compareEqual(num1Copy, num2Copy)) {
-                /* cout << "\n\n\n";
-                 for (int i = 0; i < num1Copy.size(); i++) {
-                     cout << num1Copy[i] << " ";
-                 }
-                 cout << "\nNUM2 " << endl;
-                 for (int i = 0; i < num2Copy.size(); i++) {
-                     cout << num2Copy[i] << " ";
-                 }*/
-                 //cout << endl;
+               /* cout << "\n\n\n";
+                for (int i = 0; i < num1Copy.size(); i++) {
+                    cout << num1Copy[i] << " ";
+                }
+                cout << "\nNUM2 " << endl;
+                for (int i = 0; i < num2Copy.size(); i++) {
+                    cout << num2Copy[i] << " ";
+                }*/
+                //cout << endl;
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
             }
 
             temp += to_string(times);
             counter--;
-
+            
             num2Copy = transferNumberRight(num2Copy);
-
-
-
+            
+            
+            
         }
 
         //cout << "OSTATNIE" << endl;
-
+     
         return num1Copy;
     }
 
@@ -923,11 +923,11 @@ struct BigInt {
         do {
 
             b = bCopy;
-            /*         cout << "\nPRZED X " << endl;
-                     printVector(b);*/
-                     //cout << "\n\n\n";
-                     //printVector(b);
-                     //cout << "\n\n\n";
+   /*         cout << "\nPRZED X " << endl;
+            printVector(b);*/
+            //cout << "\n\n\n";
+            //printVector(b);
+            //cout << "\n\n\n";
             if (b[b.size() - 1] % 2 == 1) {
                 //cout << "\nCOUNTER: " << counter<<endl;
                 /*cout << "\nX " << endl;
@@ -942,8 +942,8 @@ struct BigInt {
 
                 result = modulo(result, n);
 
-                /*cout << "\nPO MODULO ";*/
-                //printVector(result);
+               /*cout << "\nPO MODULO ";*/
+               //printVector(result);
 
             }
 
@@ -954,11 +954,11 @@ struct BigInt {
             if (compareEqual(b, ZERO)) {
                 additional = true;
             }
-
+            
             counter++;
         } while (!compareGreater(ONE, bCopy));
         //cout << "\nMAIN COUNTER: " << counter<<endl;
-
+        
         return result;
     }
 
@@ -980,79 +980,30 @@ struct BigInt {
 
 };
 
-void test_timeMeasuring() {
-    string przykladowe1[20] = { "5", "11", "439", "5987", "10247", "447849", "1234576", "84268541", "231576012", "1943678051", "63728958371", "917384758362", "8176284653218", "73640907618263", "836283651841090", "1234567891012134", "19587634582012307", "946305876310824657", "9584630125078946308", "16345203607948613527" };
-    string przykladowe2[20] = { "8", "37", "128", "9876", "19584", "189441", "6585945", "19814194", "783429656", "9127654328", "92873456123", "543246264621", "1235312456123", "98723465972842", "189165419815466", "8298375690832412", "89723465879324659", "494916524900512351", "4293846985231563652", "65234619654524676521" };
-    string przykladoMod[20] = { "4", "15", "123", "1235", "12521", "972351", "1289756", "87543876", "873245612", "8943521672", "89732456934", "987324687213", "9872346754286", "56814984890554", "687524752643893", "6728367859126582", "89012506782380591", "891265112895278106", "1281275381259625112", "12890759812579081201" };
-    string jeden = "198265981267598236759236590832659812659821198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692016598216598032569802398235819568923509812981236926396239861298592869201";
-    string dwa = "1109857649086573675903876590481982659812675982367592365908326598126598211982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920119826598126759823675923659083265981265982165982165980325698023982358195689235098129812369263962398612985928692011982659812675982367592365908326598126598216598216598032569802398235819568923509812981236926396239861298592869201198265981267598236759236590832659812659821659821659803256980239823581956892350981298123692639623986129859286920165982165980325698023982358195689235098129812369263962398612985928692011675309752130957239805671089679018657903769083476590123765981769347690476092096538";
-    vector<int> bufor1;
-    vector<int> bufor2;
-    vector<int> bufor3;
-    BigInt test = BigInt();
-
-    const int ilosc_powtorzen = 1;
-
-    long int czas[ilosc_powtorzen];
-    unsigned long long suma = 0;
-
-    for (int i = 0; i < 20; i++) {
-        bufor1 = test.Integer(przykladowe1[i]);
-        bufor2 = test.Integer(przykladowe2[i]);
-        bufor3 = test.Integer(przykladoMod[i]);
-        vector<int>vecJeden = test.Integer(jeden);
-        vector<int>vecDwa = test.Integer(dwa);
-
-        for (int j = 0; j < ilosc_powtorzen; j++) {
-
-            //int s = test.findS(bufor1);
-            //vector<int> d = test.findD(bufor1, s);
-
-            auto start = chrono::steady_clock::now();
-
-            //test.checkPrime(10, s, d, bufor1);
-            test.printVector(test.substract(bufor1, bufor2));
-            auto end = chrono::steady_clock::now();
-
-            auto elapsed = chrono::duration_cast<chrono::microseconds>(end - start).count();
-            czas[j] = elapsed;
-        }
-
-
-        cout << "SREDNI CZAS WYNOSI: ";
-        for (int k = 0; k < ilosc_powtorzen; k++) {
-            suma += czas[k];
-        }
-        cout << unsigned long long(suma / ilosc_powtorzen) << endl;
-
-    }
-
-
-}
 
 void callPythonAKSFunction(string input1) {
     //cout << "Otrzymana liczba do Pythona: " << input1 << endl;
 
-    Py_Initialize();
+    Py_Initialize();    
 
     PyObject* pModule = PyImport_ImportModule("AKS");
     PyObject* pValue;
-
-
+    
+    
     if (pModule) {
         PyObject* pFunc = PyObject_GetAttrString(pModule, "Aks");
-
-
-
+        
+        
+       
         if (pFunc && PyCallable_Check(pFunc)) {
-
-            pValue = PyObject_CallFunction(pFunc, "s", input1.c_str());
+            
+            pValue = PyObject_CallFunction(pFunc,"s",input1.c_str());
             //pValue = PyObject_CallFunction(pFunc,NULL);
         }
         else {
-            cout << "ERROR: FUNCTION HEJKA()" << endl;
+            cout << "ERROR: FUNCTION HEJKA()"<<endl;
         }
-
+       
     }
     else {
         cout << "ERROR: MODULE NOT IMPORTED" << endl;
@@ -1085,7 +1036,7 @@ void callPythonMRFunction(string input1) {
     else {
         cout << "ERROR: MODULE NOT IMPORTED" << endl;
     }
-
+    
     Py_Finalize();
 }
 
@@ -1160,116 +1111,170 @@ void menu() {
     string input;
 
     bool program = true;
-    while (program) {
-        cout << "Podaj liczbe do przeprowadzenia testu pierwszosci: " << endl;
-        cin >> input;
-        x.num1 = x.Integer(input);
+    while(program){
+    cout << "Podaj liczbe do przeprowadzenia testu pierwszosci: " << endl;
+    cin >> input;
+    x.num1 = x.Integer(input);
 
-        if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
-            cout << "\nPodana liczba musi byc nieparzysta!" << endl;
+    if (x.compareEqual(x.modulo(x.num1, x.TWO), x.ZERO)) {
+        cout << "\nPodana liczba musi byc nieparzysta!" << endl;
+        
+    }else{
 
-        }
-        else {
+    cout << "\nDostepne opcje: " << endl;
+    cout << "0. - Wyjscie z programu." << endl;
+    cout << "1. - Test pierwszosci Fermata (C++)." << endl;
+    cout << "2. - Test pierwszosci Fermata (Python)." << endl;
+    cout << "3. - Test pierwszosci Millera-Rabina (C++)." << endl;
+    cout << "4. - Test pierwszosci Millera-Rabina (Python)." << endl;
+    cout << "5. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
+    cout << "6. - Test pierwszosci Millera-Rabina w wersji deterministycznej (Python)." << endl;
+    cout << "7. - Test pierwszosci AKS (Python)." << endl;
+    cout << "\nProsze wybrac opcje: " << endl;
+    int wybor;
+    cin >> wybor;
+    cout << "\n\n";
+    switch (wybor) {
+    case 0: {
+        cout << "Dzikuje za skorzystanie z programu." << endl;
+        exit(0);
+        break;
+    }
+    case 1: {
+        bool isFermatPositive = x.checkFermatPrime(10, x.num1);
+        printMessageIsPrime(isFermatPositive);
+        break;
+    }
+    case 2: {
+        callPythonFermatFunction(input);
+        break;
+    }
+    case 3: {
+        int s = x.findS(x.num1);
+        vector<int> d = x.findD(x.num1, s);
 
-            cout << "\nDostepne opcje: " << endl;
-            cout << "0. - Wyjscie z programu." << endl;
-            cout << "1. - Test pierwszosci Fermata (C++)." << endl;
-            cout << "2. - Test pierwszosci Fermata (Python)." << endl;
-            cout << "3. - Test pierwszosci Millera-Rabina (C++)." << endl;
-            cout << "4. - Test pierwszosci Millera-Rabina (Python)." << endl;
-            cout << "5. - Test pierwszosci Millera-Rabina w wersji deterministycznej (C++)." << endl;
-            cout << "6. - Test pierwszosci Millera-Rabina w wersji deterministycznej (Python)." << endl;
-            cout << "7. - Test pierwszosci AKS (Python)." << endl;
-            cout << "\nProsze wybrac opcje: " << endl;
-            int wybor;
+        bool isMillerRabinPrime = x.checkPrime(10, s, d, x.num1);
+        printMessageIsPrime(isMillerRabinPrime);
+        break;
+    }
+    case 4: {
+        callPythonMRFunction(input);
+        break;
+    }
+    case 5: {
+        x.prepareValuesForMRAlgo(input);
+        int s = x.findS(x.num1);
+        vector<int> d = x.findD(x.num1, s);
+
+        bool isDeterministicMRPrime = x.checkDeterministicPrime(s, d, x.num1);
+        printMessageIsPrime(isDeterministicMRPrime);
+        break;
+    }
+    case 6: {
+        callPythonMRDeterministicFunction(input);
+        break;
+    }
+    case 7: {
+        cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
+            << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
+            << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
+            << "co najmniej 3.8. \n" << endl;
+        cout << "Jesli chcesz kontynuowac uruchomienie programu w powloce systemowej wybierz 't'.\nJesli chcesz wrocic do menu wyboru algorytmu wybierz 'n'." << endl;
+
+        bool poprawny_znak = true;
+        while (poprawny_znak) {
+            char wybor;
             cin >> wybor;
-            cout << "\n\n";
-            switch (wybor) {
-            case 0: {
-                cout << "Dzikuje za skorzystanie z programu." << endl;
-                exit(0);
-                break;
-            }
-            case 1: {
-                bool isFermatPositive = x.checkFermatPrime(10, x.num1);
-                printMessageIsPrime(isFermatPositive);
-                break;
-            }
-            case 2: {
-                callPythonFermatFunction(input);
-                break;
-            }
-            case 3: {
-                int s = x.findS(x.num1);
-                vector<int> d = x.findD(x.num1, s);
 
-                bool isMillerRabinPrime = x.checkPrime(10, s, d, x.num1);
-                printMessageIsPrime(isMillerRabinPrime);
-                break;
+            if (wybor == 't') {
+                callPythonAKSFunction(input);
+                poprawny_znak = false;
             }
-            case 4: {
-                callPythonMRFunction(input);
-                break;
+            else if (wybor == 'n') {
+                poprawny_znak = false;
             }
-            case 5: {
-                x.prepareValuesForMRAlgo(input);
-                int s = x.findS(x.num1);
-                vector<int> d = x.findD(x.num1, s);
-
-                bool isDeterministicMRPrime = x.checkDeterministicPrime(s, d, x.num1);
-                printMessageIsPrime(isDeterministicMRPrime);
-                break;
-            }
-            case 6: {
-                callPythonMRDeterministicFunction(input);
-                break;
-            }
-            case 7: {
-                cout << "Uwaga! Podany algorytm powoduje bledy w momencie uruchomiania go poprzez konsole systemowe. \n"
-                    << "Zwiazane jest to z uzyciem tzw. multiprocessingu w algorytmie. \n"
-                    << "W celu prawidlowego sprawdzenia liczby zalecamy uruchomienie skryptu z powloki Python w wersji "
-                    << "co najmniej 3.8. \n" << endl;
-                cout << "Jesli chcesz kontynuowac uruchomienie programu w powloce systemowej wybierz 't'.\nJesli chcesz wrocic do menu wyboru algorytmu wybierz 'n'." << endl;
-
-                bool poprawny_znak = true;
-                while (poprawny_znak) {
-                    char wybor;
-                    cin >> wybor;
-
-                    if (wybor == 't') {
-                        callPythonAKSFunction(input);
-                        poprawny_znak = false;
-                    }
-                    else if (wybor == 'n') {
-                        poprawny_znak = false;
-                    }
-                    else {
-                        cout << "Prosze wybrac odpowiednia opcje." << endl;
-                    }
-                }
-
-            }
+            else {
+                cout << "Prosze wybrac odpowiednia opcje." << endl;
             }
         }
-        cout << "\n\nW celu wprowadzenia nowej liczby wciśnij 't'.\n";
-        cout << "W celu wyjscia z programu wybierz dowolny znak. \n";
-        char powtorz;
-        cin >> powtorz;
-        if (powtorz == 't') {
 
+    }
+    }
+    }
+    cout << "\n\nW celu wprowadzenia nowej liczby wciśnij 't'.\n";
+    cout << "W celu wyjscia z programu wybierz dowolny znak. \n";
+    char powtorz;
+    cin >> powtorz;
+    if (powtorz == 't') {
+       
+    }
+    else {
+        program = false;
+    }
+
+    }
+    
+
+}
+
+
+void test_timeMeasuring() {
+    string przykladoweNiePierwsze[40] = { "9", "65", "363", "1003", "32045", "499999", "1234573", "84268541", "231576015", "1943678051", "63728958373", "917384758367", "8176284653219", "73640907618261", "836283651841015", "1234567891012139", "19587634582012307", "946305876310824655", "9584630125078946301", "16345203607948613523", "135301852344706746049", "1111111111111111111111", "14390600632080526061859", "111111333333555555777777", "1428571428571428571428571", "10011110011011110110110011", "339341355381394398413415437", "2775577757352755375573357273", "81873842574213466006829740415", "999999777777555555333333111111", "1317313773719779779173773137133", "11111111111111111111111111111111", "432162695486262963136144381497589", "1298074214633706907132624091455649", "59999999999999999999999999999999997", "119665765800843104737370354851986949", "22537211232223552133332272923531222223112175722333721931322254123743221133522349", "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999913", "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999823", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343411343434343434343434343434343434343434343434111" };//Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
+
+    string przykladowePierwsze[40] = { "7", "59", "241", "2113", "31513", "281719", "4441939", "10000019", "181111181", "2232232273", "99999999977", "101111111111", "1169769749219", "15307263442931", "231917131175321", "1311753223571113", "15125111011152151", "102598800232111471", "6787988999657777797", "74041360822451971987", "777777775555552323323", "1079180598685959785401", "35452590104031691935943", "699999999986868668888861", "3333322225555555777777777", "49162536496481100121144169", "718281828459040954828182817", "1596165317111770183018911953", "42424864624626642462642424223", "691701709719727733739743751757", "7019385211055596446229489549303", "29998887776665554443332221110009", "433826412254338305779643383474369", "6339968890136139283151942797098461", "89423567665158371901674138556551281", "357315397211233277367389457479547569" ,"22537211232223552133332272923531222223112175722333721931322254123743221133522347", "7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777771", "100127631001285310012921100129311001299910013141100132871001347310013287100131411001299910012931100129211001285310012763", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343434343434343434343434343434343434343434343434343"}; //Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
+                                                                                                                                                                                   
+    string przykladoweMieszane[40] = { "3", "17", "241", "3873", "12521", "293339", "1289751", "87543873", "234030131", "8943521671", "89732456937", "987324687213", "1246888642073", "90442568793803", "687524752643893", "6728367859126587", "89012506782380591", "891265112895278105", "1281275381259625113", "12890759812579081201", "111111110111011111113", "1001303203318050290393", "81402749386839761113321", "111111333333555555777777", "1428571428571428571428573", "34181543186513112112641339", "339341355381394398413415437", "2775577757352755375573357273", "18276412521634351272910001331", "999999777777555555333333111111","1317313773719779779173773137137", "23112941343471735359619678378975", "162259276829213363391578010288129", "1566921454155358203906337037634645", "19609611961961196896119808611981861", "119665765800843104737370354851986949", "22537211232663582123332272923531111223112175722333731431322254123743221133522343", "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999913", "100127631001285310012921100129311001299910013141100132871001347310013287100131411001299910012931100129211001285310012767", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343434343434343434343434343434343434343434343431111"};//0,1,2,3,5,8,13,21,34 - pierwsze. Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
+    
+    vector<int> bufor1;
+    vector<int> bufor2;
+    vector<int> bufor3;
+    BigInt test = BigInt();
+
+    const int ilosc_powtorzen = 1;
+
+    long int czas[ilosc_powtorzen];
+    unsigned long long suma = 0;
+
+    for (int i = 0; i < 40; i++) {
+        //bufor1 = test.Integer(przykladoweNiePierwsze[i]);
+        //bufor2 = test.Integer(przykladowePierwsze[i]);
+        //bufor3 = test.Integer(przykladoweMieszane[i]);
+        //vector<int>vecJeden = test.Integer(jeden);
+        //vector<int>vecDwa = test.Integer(dwa);
+
+        for (int j = 0; j < ilosc_powtorzen; j++) {
+
+            //int s = test.findS(bufor2);
+            //vector<int> d = test.findD(bufor2, s);
+
+            auto start = chrono::steady_clock::now();
+            callPythonMRFunction(przykladoweMieszane[i]);
+            //test.checkPrime(10, s, d, bufor2);
+            //test.printVector(test.substract(bufor1, bufor2));
+            auto end = chrono::steady_clock::now();
+
+            auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+            czas[j] = elapsed;
         }
-        else {
-            program = false;
+
+        cout << "INDEKS i: " << i << endl << endl;
+        cout << "SREDNI CZAS WYNOSI: ";
+        for (int k = 0; k < ilosc_powtorzen; k++) {
+            suma += czas[k];
         }
+        cout << unsigned long long(suma / ilosc_powtorzen) << endl;
 
     }
 
 
 }
 
-int main() {
 
-    menu();
+int main(){
+
+    //menu();
+   
+    test_timeMeasuring();
 
     return 0;
 }
