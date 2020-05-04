@@ -82,10 +82,8 @@ def MillerRabin(args):
     d = n//(2**s)
     k = 10
     result = checkPrime(n,s,d,k)
-    if(result == True):
-        print('Liczba jest pierwsza.')
-    else:
-        print('Liczba nie jest pierwsza.')
-
-def Test():
-    FME(1000000000000000000000000000000000000000000000000121,1000000000000000000000000000000000000000000000000121,123235151235325215)
+    return result
+    #if(result == True):
+    #    print('Liczba jest pierwsza.')
+    #else:
+    #    print('Liczba nie jest pierwsza.')

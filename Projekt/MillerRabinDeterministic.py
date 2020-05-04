@@ -63,7 +63,8 @@ def MillerRabinDeterministic(args):
     k = 10
     numbers = checkSection(n)
     result = checkPrime(n,s,d,len(numbers),numbers)
-    if(result == True):
-        print('Liczba jest pierwsza.')
-    else:
-        print('Liczba nie jest pierwsza.')
+    return result
+    #if(result == True):
+    #    print('Liczba jest pierwsza.')
+    #else:
+    #    print('Liczba nie jest pierwsza.')
