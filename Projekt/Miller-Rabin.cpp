@@ -9,6 +9,7 @@
 #include <random>
 #include <cmath>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
@@ -26,10 +27,8 @@ struct BigInt {
     vector<int> num2;
     vector<int> result;
 
-
     vector<int> vectorForSection[3] = { Integer("18446744073709551616"), Integer("318665857834031151167461"), Integer("3317044064679887385961981") };
     unsigned long long numSection[13] = { 0, 2047, 1373653 , 9080191 , 25326001 , 3215031751 , 4759123141 , 1122004669633 ,2152302898747, 3474749660383 ,  341550071728321, 3825123056546413051 };
-
 
     vector<int> numbersToMR;
     int amountOfNumbersToMr;
@@ -819,39 +818,22 @@ struct BigInt {
     bool checkPrime(int repeats, int s, vector<int> d, vector<int> mod) {
         vector<int> one = ONE;
         vector<int>modDecrement = substract(mod, one);
-
         for (int i = 0; i < repeats; i++) {
-
-            //int a = rand() % 2000 + 1;
-            //int a = 161;
             int a = generateRandom(mod);
             string A = to_string(a);
-            //printVector(powerFastModulo(Integer(A), d, mod));
             if (!compareEqual(powerFastModulo(Integer(A), d, mod), one)) {
-
-
                 for (int r = 0; r <= s; r++) {
-
                     vector<int>temporary = multiply(Integer(to_string(int(pow(2, r)))), d);
-                    //printVector(temporary);
                     if (!compareEqual(powerFastModulo(Integer(A), temporary, mod), modDecrement)) {
                         if (r == (s - 1)) {
                             return false;
                         }
                     }
                     else {
-
                         break;
                     }
-
-
                 }
-
-
             }
-
-
-
         }
         return true;
     }
@@ -896,25 +878,6 @@ struct BigInt {
         return true;
     }
 
-    vector<int> powerL(vector<int>num1, vector<int>num2, vector<int>mod) {
-        vector<int> result = Integer("1");
-        vector<int>zero = Integer("0");
-
-        while (!compareEqual(num2, zero)) {
-
-            if (num2[num2.size() - 1] % 2) {
-
-                vector<int>mnoz = multiply(result, num1);
-                result = modulo(mnoz, mod);
-
-            }
-
-            num2 = divide(num2, Integer("2"));
-            num1 = modulo(multiply(num1, num1), mod);
-        }
-        return result;
-    }
-
     vector<int> powerFastModulo(vector<int>a, vector<int>b, vector<int>n) {
         vector<int> x = a;
         vector<int> result = ONE;
@@ -949,10 +912,10 @@ struct BigInt {
     }
 
     bool checkFermatPrime(int repeats, vector<int> num1) {
+
         vector<int> num1Decrement = substract(num1, ONE);
+
         for (int i = 0; i < repeats; i++) {
-            //int random = rand() % 5000 + 1;
-            //cout << "Random " << random << endl;
             int random = generateRandom(num1);
             if (compareEqual(powerFastModulo(Integer(to_string(random)), num1Decrement, num1), ONE)) {
                 continue;
@@ -970,14 +933,13 @@ struct BigInt {
         int temp = 0;
         if (len == 1) {
             temp = num1[0];
-            int random = rand() % temp + 1;
+            int random = rand() % (temp-2) + 2;
             return random;
         }
         else {
             return rand() % 5000 + 1;
         }
     }
-
 };
 
 
@@ -1234,21 +1196,20 @@ void test_timeMeasuring() {
     srand(time(NULL));
     string exaplesNotPrime[40] = { "9", "65", "363", "1003", "32045", "499999", "1234573", "84268541", "231576015", "1943678051", "63728958373", "917384758367", "8176284653219", "73640907618261", "836283651841015", "1234567891012139", "19587634582012307", "946305876310824655", "9584630125078946301", "16345203607948613523", "135301852344706746049", "1111111111111111111111", "14390600632080526061859", "111111333333555555777777", "1428571428571428571428573", "10011110011011110110110011", "339341355381394398413415437", "2775577757352755375573357273", "81873842574213466006829740415", "999999777777555555333333111111", "1317313773719779779173773137133", "11111111111111111111111111111111", "432162695486262963136144381497589", "1298074214633706907132624091455649", "59999999999999999999999999999999997", "119665765800843104737370354851986949", "22537211232223552133332272923531222223112175722333721931322254123743221133522349", "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999913", "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999823", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343411343434343434343434343434343434343434343434111" };//Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
 
-    string examplesPrime[40] = { "7", "59", "241", "2113", "31513", "281719", "4441939", "10000019", "181111181", "2232232273", "99999999977", "101111111111", "1169769749219", "15307263442931", "231917131175321", "1311753223571113", "15125111011152151", "102598800232111471", "6787988999657777797", "74041360822451971987", "777777775555552323323", "1079180598685959785401", "35452590104031691935943", "699999999986868668888861", "3333322225555555777777777", "49162536496481100121144169", "718281828459040954828182817", "1596165317111770183018911953", "42424864624626642462642424223", "691701709719727733739743751757", "7019385211055596446229489549303", "29998887776665554443332221110009", "433826412254338305779643383474369", "6339968890136139283151942797098461", "89423567665158371901674138556551281", "357315397211233277367389457479547569" ,"22537211232223552133332272923531222223112175722333721931322254123743221133522347", "7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777771", "100127631001285310012921100129311001299910013141100132871001347310013287100131411001299910012931100129211001285310012763", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343434343434343434343434343434343434343434343434343"}; //Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
+    string examplesPrime[40] =   { "7", "59", "241", "2113", "31513", "281719", "4441939", "10000019", "181111181", "2232232273", "99999999977", "101111111111", "1169769749219", "15307263442931", "231917131175321", "1311753223571113", "15125111011152151", "102598800232111471", "6787988999657777797", "74041360822451971987", "777777775555552323323", "1079180598685959785401", "35452590104031691935943", "699999999986868668888861", "3333322225555555777777777", "49162536496481100121144169", "718281828459040954828182817", "1596165317111770183018911953", "42424864624626642462642424223", "691701709719727733739743751757", "7019385211055596446229489549303", "29998887776665554443332221110009", "433826412254338305779643383474369", "6339968890136139283151942797098461", "89423567665158371901674138556551281", "357315397211233277367389457479547569" ,"22537211232223552133332272923531222223112175722333721931322254123743221133522347", "7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777771", "100127631001285310012921100129311001299910013141100132871001347310013287100131411001299910012931100129211001285310012763", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343434343434343434343434343434343434343434343434343"}; //Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
                                                                                                                                                                                    
-    string exampleMixed[40] = { "3", "17", "241", "3873", "12521", "293339", "1289751", "87543873", "234030131", "8943521671", "89732456937", "987324687213", "1246888642073", "90442568793803", "687524752643893", "6728367859126587", "89012506782380591", "891265112895278105", "1281275381259625113", "12890759812579081201", "111111110111011111113", "1001303203318050290393", "81402749386839761113321", "111111333333555555777777", "1428571428571428571428573", "34181543186513112112641339", "339341355381394398413415437", "2775577757352755375573357273", "18276412521634351272910001331", "999999777777555555333333111111","1317313773719779779173773137137", "23112941343471735359619678378975", "162259276829213363391578010288129", "1566921454155358203906337037634645", "19609611961961196896119808611981861", "119665765800843104737370354851986949", "22537211232663582123332272923531111223112175722333731431322254123743221133522343", "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999913", "100127631001285310012921100129311001299910013141100132871001347310013287100131411001299910012931100129211001285310012767", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343434343434343434343434343434343434343434343431111"};//0,1,2,3,5,8,13,21,34 - pierwsze. Od 1 do 36, 80-cyfrowa, 100-cyfrowa, 120-cyfrowa, 160-cyfrowa
+    string exampleMixed[40] =    { "3", "17", "561", "1729", "41041", "293339", "1289751", "87543873", "234030131", "8943521671", "89732456937", "987324687213", "1246888642073", "90442568793803", "687524752643893", "1436697831295441", "89012506782380591", "891265112895278105", "4954039956700380001", "12890759812579081201", "111111110111011111113", "1001303203318050290393", "81402749386839761113321", "111111333333555555777777", "1428571428571428571428573", "34181543186513112112641339", "339341355381394398413415437", "2775577757352755375573357273", "18276412521634351272910001331", "999999777777555555333333111111", "1317313773719779779173773137137", "11111111111111111111111111111111", "432162695486262963136144381497589", "1298074214633706907132624091455649", "59999999999999999999999999999999997", "119665765800843104737370354851986949", "22537211232223552133332272923531222223112175722333721931322254123743221133522349", "9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999913", "999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999823", "3737373737373737373737373737373737373737373737373737373737373737373737373743434343434343434343434343434343434343411343434343434343434343434343434343434343434111" };//2,3,4,16,19 - Carmichaela, 1,2,6,9,14,22 - pierwsze, reszta nie pierwsza.
     
     BigInt test = BigInt();
 
     const int repeats = 20;
+    const int repeats_inside_algo = 20;
 
-    int mode = 2;
-
-   
+    int mode = 3;
 
     
     //Mode 1 == NotPrime, mode 2 == Prime, mode 3 == exampleMixed;
-    cout << "\n\nTEST FOR NOT PRIMARY NUMBERS\n" << endl;
+    //cout << "\n\nTEST FOR NOT PRIMARY NUMBERS\n" << endl;
     if (mode == 1) {
 
         //MillerRabin C++ Values
@@ -1317,7 +1278,7 @@ void test_timeMeasuring() {
 
                 int s = test.findS(notPrimeNumber);
                 vector<int> d = test.findD(notPrimeNumber, s);
-                wasResultTrue_MR_C = test.checkPrime(20, s, d, notPrimeNumber);
+                wasResultTrue_MR_C = test.checkPrime(repeats_inside_algo, s, d, notPrimeNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1370,7 +1331,7 @@ void test_timeMeasuring() {
 
                 auto start = chrono::steady_clock::now();
 
-                wasResultTrue_Fermat_C = test.checkFermatPrime(20, notPrimeNumber);
+                wasResultTrue_Fermat_C = test.checkFermatPrime(repeats_inside_algo, notPrimeNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1466,14 +1427,27 @@ void test_timeMeasuring() {
             avarage_MR_DET_Python_time[i] = unsigned long long(sum_MR_DET_Python / repeats);
             results_in_percentage_MR_DET_Python[i] = float(correct_results_MR_DET_Python) / repeats * 100;
      
-
-
-            if(i == 0)
-                cout <<"Len"<<setw(20) << "MR(C) T[ms]" << setw(20) << "MR(C) %" << setw(20) << "MR(P) T[ms]" << setw(20) << "MR(P) %" << setw(20) << "F(C) T[ms]" << setw(20) << "F(C) %" << setw(20) << "F(P) T[ms]" << setw(20) << "F(P) %" << setw(20) << "MRD(C) T[ms]" << setw(20) << "MRD(C) %" << setw(20) << "MRD(P) T[ms]" << setw(20) << "MRD(P) %" <<endl;
+          
+            /*
+            if (i == 0) 
+                cout << "Len" << setw(20) << "MR(C) T[ms]" << setw(20) << "MR(C) %" << setw(20) << "MR(P) T[ms]" << setw(20) << "MR(P) %" << setw(20) << "F(C) T[ms]" << setw(20) << "F(C) %" << setw(20) << "F(P) T[ms]" << setw(20) << "F(P) %" << setw(20) << "MRD(C) T[ms]" << setw(20) << "MRD(C) %" << setw(20) << "MRD(P) T[ms]" << setw(20) << "MRD(P) %" << endl;
             cout << exaplesNotPrime[i].length() << setw(20)<< avarage_MR_C_time[i] << setw(20) << results_in_percentage_MR_C[i] << setw(20) << avarage_MR_Python_time[i] << setw(20) << results_in_percentage_MR_Python[i] << setw(20) << avarage_Fermat_C_time[i] << setw(20) << results_in_percentage_Fermat_C[i]<< setw(20) << avarage_Fermat_Python_time[i] << setw(20) << results_in_percentage_Fermat_Python[i]<< setw(20) << avarage_MR_DET_C_time[i] << setw(20) << results_in_percentage_MR_DET_C[i] << setw(20) << avarage_MR_DET_Python_time[i] << setw(20) << results_in_percentage_MR_DET_Python[i]<<endl;
-         }
+            */
+
+            if (i == 0)
+                cout << "Len" << ";" << "MR(C) T[ms]" << ";" << "MR(C) %" << ";" << "MR(P) T[ms]" << ";" << "MR(P) %" << ";" << "F(C) T[ms]" << ";" << "F(C) %" << ";" << "F(P) T[ms]" << ";" << "F(P) %" << ";" << "MRD(C) T[ms]" << ";" << "MRD(C) %" << ";" << "MRD(P) T[ms]" << ";" << "MRD(P) %" << endl;
+            cout << exaplesNotPrime[i].length() << ";" << avarage_MR_C_time[i] << ";" << results_in_percentage_MR_C[i] << ";" << avarage_MR_Python_time[i] << ";" << results_in_percentage_MR_Python[i] << ";" << avarage_Fermat_C_time[i] << ";" << results_in_percentage_Fermat_C[i] << ";" << avarage_Fermat_Python_time[i] << ";" << results_in_percentage_Fermat_Python[i] << ";" << avarage_MR_DET_C_time[i] << ";" << results_in_percentage_MR_DET_C[i] << ";" << avarage_MR_DET_Python_time[i] << ";" << results_in_percentage_MR_DET_Python[i] << endl;
+
+
+            
+
+         
+      
+
+        }
+        
     }
-    //mode = 2;
+   // mode = 2;
     //cout << "\n\nTEST FOR PRIMARY NUMBERS\n" << endl;
     if (mode == 2) {
 
@@ -1544,7 +1518,7 @@ void test_timeMeasuring() {
 
                 int s = test.findS(primeNumber);
                 vector<int> d = test.findD(primeNumber, s);
-                wasResultTrue_MR_C = test.checkPrime(20, s, d, primeNumber);
+                wasResultTrue_MR_C = test.checkPrime(repeats_inside_algo, s, d, primeNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1593,7 +1567,7 @@ void test_timeMeasuring() {
 
                 auto start = chrono::steady_clock::now();
 
-                wasResultTrue_Fermat_C = test.checkFermatPrime(20, primeNumber);
+                wasResultTrue_Fermat_C = test.checkFermatPrime(repeats_inside_algo, primeNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1690,16 +1664,22 @@ void test_timeMeasuring() {
             results_in_percentage_MR_DET_Python[i] = float(correct_results_MR_DET_Python) / repeats * 100;
 
 
-
-            if (i == 0)
+        /*
+           if (i == 0)
                 cout << "Len" << setw(20) << "MR(C) T[ms]" << setw(20) << "MR(C) %" << setw(20) << "MR(P) T[ms]" << setw(20) << "MR(P) %" << setw(20) << "F(C) T[ms]" << setw(20) << "F(C) %" << setw(20) << "F(P) T[ms]" << setw(20) << "F(P) %" << setw(20) << "MRD(C) T[ms]" << setw(20) << "MRD(C) %" << setw(20) << "MRD(P) T[ms]" << setw(20) << "MRD(P) %" << endl;
             cout << exaplesNotPrime[i].length() << setw(20) << avarage_MR_C_time[i] << setw(20) << results_in_percentage_MR_C[i] << setw(20) << avarage_MR_Python_time[i] << setw(20) << results_in_percentage_MR_Python[i] << setw(20) << avarage_Fermat_C_time[i] << setw(20) << results_in_percentage_Fermat_C[i] << setw(20) << avarage_Fermat_Python_time[i] << setw(20) << results_in_percentage_Fermat_Python[i] << setw(20) << avarage_MR_DET_C_time[i] << setw(20) << results_in_percentage_MR_DET_C[i] << setw(20) << avarage_MR_DET_Python_time[i] << setw(20) << results_in_percentage_MR_DET_Python[i] << endl;
+       */
+            if (i == 0)
+                cout << "Len" << ";" << "MR(C) T[ms]" << ";" << "MR(C) %" << ";" << "MR(P) T[ms]" << ";" << "MR(P) %" << ";" << "F(C) T[ms]" << ";" << "F(C) %" << ";" << "F(P) T[ms]" << ";" << "F(P) %" << ";" << "MRD(C) T[ms]" << ";" << "MRD(C) %" << ";" << "MRD(P) T[ms]" << ";" << "MRD(P) %" << endl;
+            cout << exaplesNotPrime[i].length() << ";" << avarage_MR_C_time[i] << ";" << results_in_percentage_MR_C[i] << ";" << avarage_MR_Python_time[i] << ";" << results_in_percentage_MR_Python[i] << ";" << avarage_Fermat_C_time[i] << ";" << results_in_percentage_Fermat_C[i] << ";" << avarage_Fermat_Python_time[i] << ";" << results_in_percentage_Fermat_Python[i] << ";" << avarage_MR_DET_C_time[i] << ";" << results_in_percentage_MR_DET_C[i] << ";" << avarage_MR_DET_Python_time[i] << ";" << results_in_percentage_MR_DET_Python[i] << endl;
+            
+            
         }
         
         
     }
     //mode = 3;
-    //cout << "\n\nTEST FOR MIXED NUMBERS\n" << endl;
+    cout << "\n\nTEST FOR MIXED NUMBERS\n" << endl;
     if (mode == 3) {
         //MillerRabin C++ Values
         long int time_MR_C[repeats];
@@ -1767,7 +1747,7 @@ void test_timeMeasuring() {
 
                 int s = test.findS(mixedNumber);
                 vector<int> d = test.findD(mixedNumber, s);
-                wasResultTrue_MR_C = test.checkPrime(20, s, d, mixedNumber);
+                wasResultTrue_MR_C = test.checkPrime(repeats_inside_algo, s, d, mixedNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1816,7 +1796,7 @@ void test_timeMeasuring() {
 
                 auto start = chrono::steady_clock::now();
 
-                wasResultTrue_Fermat_C = test.checkFermatPrime(20, mixedNumber);
+                wasResultTrue_Fermat_C = test.checkFermatPrime(repeats_inside_algo, mixedNumber);
 
                 auto end = chrono::steady_clock::now();
                 auto elapsed = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1886,7 +1866,7 @@ void test_timeMeasuring() {
             avarage_MR_DET_C_time[i] = unsigned long long(sum_MR_DET_C / repeats);
             results_in_percentage_MR_DET_C[i] = float(correct_results_MR_DET_C) / repeats * 100;
 
-
+            
 
 
             //MILLER RABIN DET Python
@@ -1913,10 +1893,16 @@ void test_timeMeasuring() {
             results_in_percentage_MR_DET_Python[i] = float(correct_results_MR_DET_Python) / repeats * 100;
 
 
-
+           
             if (i == 0)
                 cout << "Len" << setw(20) << "MR(C) T[ms]" << setw(20) << "MR(C) %" << setw(20) << "MR(P) T[ms]" << setw(20) << "MR(P) %" << setw(20) << "F(C) T[ms]" << setw(20) << "F(C) %" << setw(20) << "F(P) T[ms]" << setw(20) << "F(P) %" << setw(20) << "MRD(C) T[ms]" << setw(20) << "MRD(C) %" << setw(20) << "MRD(P) T[ms]" << setw(20) << "MRD(P) %" << endl;
             cout << exaplesNotPrime[i].length() << setw(20) << avarage_MR_C_time[i] << setw(20) << results_in_percentage_MR_C[i] << setw(20) << avarage_MR_Python_time[i] << setw(20) << results_in_percentage_MR_Python[i] << setw(20) << avarage_Fermat_C_time[i] << setw(20) << results_in_percentage_Fermat_C[i] << setw(20) << avarage_Fermat_Python_time[i] << setw(20) << results_in_percentage_Fermat_Python[i] << setw(20) << avarage_MR_DET_C_time[i] << setw(20) << results_in_percentage_MR_DET_C[i] << setw(20) << avarage_MR_DET_Python_time[i] << setw(20) << results_in_percentage_MR_DET_Python[i] << endl;
+        /*
+            if (i == 0)
+                cout << "Len" << ";" << "MR(C) T[ms]" << ";" << "MR(C) %" << ";" << "MR(P) T[ms]" << ";" << "MR(P) %" << ";" << "F(C) T[ms]" << ";" << "F(C) %" << ";" << "F(P) T[ms]" << ";" << "F(P) %" << ";" << "MRD(C) T[ms]" << ";" << "MRD(C) %" << ";" << "MRD(P) T[ms]" << ";" << "MRD(P) %" << endl;
+            cout << exaplesNotPrime[i].length() << ";" << avarage_MR_C_time[i] << ";" << results_in_percentage_MR_C[i] << ";" << avarage_MR_Python_time[i] << ";" << results_in_percentage_MR_Python[i] << ";" << avarage_Fermat_C_time[i] << ";" << results_in_percentage_Fermat_C[i] << ";" << avarage_Fermat_Python_time[i] << ";" << results_in_percentage_Fermat_Python[i] << ";" << avarage_MR_DET_C_time[i] << ";" << results_in_percentage_MR_DET_C[i] << ";" << avarage_MR_DET_Python_time[i] << ";" << results_in_percentage_MR_DET_Python[i] << endl;
+            */
+
         }
     }
 
@@ -1926,9 +1912,9 @@ void test_timeMeasuring() {
 
 int main(){
 
-    //menu();
+    menu();
    
-    test_timeMeasuring();
-   
+    //test_timeMeasuring();
+
     return 0;
 }
