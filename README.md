@@ -1,5 +1,5 @@
 # OiAK
-Repository for Uni. 
+Repository for Uni Project. 
 
 
 # Instruction to use Python Script inside C++ code #
