@@ -69,22 +69,13 @@ def fourthStep(n, r):
 def fifthStep(n, r):
     phiN = eulerFunction(r)
     maxRange = math.floor(math.sqrt(phiN)*math.log2(n))
-
-    if maxRange > n:
-        maxRange = n
-    threads = []
-    rand = maxRange / 8
-    rand = math.floor(rand)
-    if(rand == 0):
-        rand = 1
-    
     pythonManager = multiprocessing.Manager()
     sharedDictionary = pythonManager.dict()
     
     processes = []
 
     for a in range(0, maxRange, 1):
-        proces = multiprocessing.Process(target=createPolynomials, args=(n,a, a+1, sharedDictionary))
+        proces = multiprocessing.Process(target=handlePolynomials, args=(n,a, a+1, sharedDictionary))
         proces.start()
         processes.append(proces)
     for Pn in processes:
@@ -97,7 +88,7 @@ def fifthStep(n, r):
 
 #Funkcja tworząca wielomiany zgodnie ze wzórem skróconego mnożenia
 #(a+b)^n. Wykorzystany symbol newtona (n po k).
-def createPolynomials(number, n, k, sharedDictionary):
+def handlePolynomials(number, n, k, sharedDictionary):
     power = n/(k-n)
     if n == 0:
         n = 1
