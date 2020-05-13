@@ -584,16 +584,16 @@ struct BigInt {
 
         int counter = 0;
         if (compareEqual(num1, ZERO)) {
-            //cout << "Pierwsza liczba to zero" << endl;
+ 
             return ZERO;
         }
 
         if (compareEqual(num2, ONE)) {
-            //cout << "Druga liczba to 1" << endl;
+
             return num1;
         }
         if (num1.size() == 1 && num2.size() == 1) {
-            //cout << "Liczby sa jednakowej dlugosci" << endl;
+
             return Integer(to_string(num1[0] / num2[0]));
         }
 
@@ -604,7 +604,7 @@ struct BigInt {
         vector<int> num2Copy = num2;
 
         if (compareEqual(num2, ZERO)) {
-            //cout << "Druga liczba to zero" << endl;
+
             return num2;
         }
 
@@ -623,10 +623,10 @@ struct BigInt {
         string temp = "";
 
 
-        while (counter > 0) { // BYŁO: counter > 0
+        while (counter > 0) { 
             int times = 0;
             if (compareEqual(num1Copy,ZERO) || compareEqual(num2Copy, ZERO)) { 
-               // cout << "\n\nCOUNTER " << counter << endl;
+
                 for (int i = counter; i > 0; i--) {
                     temp += '0';
                     
@@ -640,7 +640,7 @@ struct BigInt {
             }
             
             temp += to_string(times);
-           // cout << "TEMP: " << temp << endl;
+
             counter--;
             num2Copy = transferNumberRight(num2Copy);
     
@@ -689,7 +689,7 @@ struct BigInt {
             num2Copy = transferNumberLeft(num2Copy);
             counter++;
         }
-        //cout << "COUNTER: " << counter << endl;
+      
         num2Copy = transferNumberRight(num2Copy);
 
         if (compareEqual(num2Copy, num1Copy)) {
@@ -710,15 +710,7 @@ struct BigInt {
             }
 
             while (compareGreater(num1Copy, num2Copy) || compareEqual(num1Copy, num2Copy)) {
-               /* cout << "\n\n\n";
-                for (int i = 0; i < num1Copy.size(); i++) {
-                    cout << num1Copy[i] << " ";
-                }
-                cout << "\nNUM2 " << endl;
-                for (int i = 0; i < num2Copy.size(); i++) {
-                    cout << num2Copy[i] << " ";
-                }*/
-                //cout << endl;
+
                 num1Copy = substract(num1Copy, num2Copy);
                 times++;
             }
@@ -732,7 +724,6 @@ struct BigInt {
             
         }
 
-        //cout << "OSTATNIE" << endl;
      
         return num1Copy;
     }
@@ -944,7 +935,6 @@ struct BigInt {
 
 
 void callPythonAKSFunction(string input1) {
-    //cout << "Otrzymana liczba do Pythona: " << input1 << endl;
 
     Py_Initialize();    
 
@@ -960,7 +950,6 @@ void callPythonAKSFunction(string input1) {
         if (pFunc && PyCallable_Check(pFunc)) {
             
             pValue = PyObject_CallFunction(pFunc,"s",input1.c_str());
-            //pValue = PyObject_CallFunction(pFunc,NULL);
         }
         else {
             cout << "ERROR: FUNCTION HEJKA()"<<endl;
