@@ -54,7 +54,7 @@ def YourPythonFunctionName(args):
 ```
     
 
-#Instrukcja podłączenia i użycia skryptów Pythona wewnątrz kodu C++#
+# Instrukcja podłączenia i użycia skryptów Pythona wewnątrz kodu C++ #
 
 Najważniejsze rzeczy do ustawienia w środowisku VisualStudio.
 1. Kliknij prawym przyciskiem myszy na właściwości projektu.
