@@ -52,7 +52,10 @@ def YourPythonFunctionName(args):
     print(args)
     print(type(args))
 ```
-    
+
+
+# OiAK
+Repozytorium przygotowane pod projekt z przedmiotu Organizacja i Architektura Komputerów (OiAK), na politechnice Wrocławskiej (PWr), wydziale Elektroniki (W4). 
 
 # Instrukcja podłączenia i użycia skryptów Pythona wewnątrz kodu C++ #
 
